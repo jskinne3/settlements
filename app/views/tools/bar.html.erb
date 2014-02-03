@@ -13,6 +13,8 @@
     <tr>
       <td>Units:</td>
       <td><%= select_tag :unit, options_for_select(@unit_options, @unit) %></td>
+      <td>Stacking:</td>
+      <td><%= select_tag :stack_bars, options_for_select(['stacked bars', 'unstacked'], params[:stack_bars]) %></td>
     <tr>
       <td colspan="5"><%= submit_tag 'Chart this data' %></td>
     </tr>
@@ -32,7 +34,7 @@
 
       var chart_options = {
         bar: { groupWidth: '75%' },
-        isStacked: true
+        isStacked: <%= params[:stack_bars] == 'stacked bars' %>
       };
       var table_options = {
         width: 825
