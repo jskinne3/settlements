@@ -12,8 +12,10 @@ class ToolsController < ApplicationController
   def bar
     @question_options = TextQuestions + BinaryQuestions
     @bar_meaning_options = ['area', 'rndn']
+    @unit_options = ['number of answers', 'percent']
     @question = (params[:question].blank? ? 'q10_1a' : params[:question])
-      @bar_meaning = (params[:bar_meaning].blank? ? 'area' : params[:bar_meaning])
+    @bar_meaning = (params[:bar_meaning].blank? ? 'area' : params[:bar_meaning])
+    @unit = (params[:unit].blank? ? 'percent' : params[:unit])
     if request.post?
       @questionnaires = Questionnaire.all
       @color_meanings = @questionnaires.map{|q| q[@question.to_sym]}.uniq
@@ -23,11 +25,16 @@ class ToolsController < ApplicationController
       for bar_name in @bar_names
         # To create each bar in the chart, select all the questionnaires where area or rndn is a given name.
         qs_for_bar = @questionnaires.select{|q| q[@bar_meaning.to_sym] == bar_name}
-        row = [bar_name]
+        row = Array.new
         for answer in @color_meanings
           # To create each region of a bar, count the questionnaires where the question is answered in a given way.
           row << qs_for_bar.select{|q| q[@question.to_sym] == answer}.count
         end
+        if @unit == 'percent'
+          sum = row.sum
+          row = row.map{|n| ("%.2f" % ((n.to_f/sum.to_f)*100.0)).to_f}
+        end
+        row.unshift(bar_name) # label each row
         @data << row
       end
     end

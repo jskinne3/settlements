@@ -1,5 +1,6 @@
 <style>
   td {text-align: right;}
+  select{width: 150px;}
 </style>
 <%= form_tag do %>
   <table>
@@ -9,6 +10,9 @@
       <td>Group by:</td>
       <td><%= select_tag :bar_meaning, options_for_select(@bar_meaning_options, @bar_meaning) %></td>
     </tr>
+    <tr>
+      <td>Units:</td>
+      <td><%= select_tag :unit, options_for_select(@unit_options, @unit) %></td>
     <tr>
       <td colspan="5"><%= submit_tag 'Chart this data' %></td>
     </tr>
