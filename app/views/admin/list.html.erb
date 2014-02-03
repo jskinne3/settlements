@@ -1,0 +1,52 @@
+<h1>Concern Worldwide</h1>
+<p>
+  <%= @count %> questionnaires listed below.
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>rndn</th>
+      <th>area</th>
+      <th>q1_4b</th>
+      <th>q1_17c</th>
+      <th>q1_17a</th>
+      <th>q1_17b</th>
+      <th>q1_19</th>
+      <th>q2_1</th>
+      <th>q2_2</th>
+      <th>q3_9c</th>
+      <th>q7_3</th>
+      <th>inc_bw</th>
+      <th>inc_all</th>
+      <th>q9_11_bw</th>
+      <th>q10_1</th>
+      <th>q10_9</th>
+      <th>q10_10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for q in @questionnaires %>
+      <tr>
+        <td><%= q.id %></th>
+        <td><%= q.rndn %></td>
+        <td><%= q.area %></td>
+        <td><%= q.q1_4b %></td>
+        <td><%= q.q1_17c %></td>
+        <td><%= q.q1_17a %></td>
+        <td><%= q.q1_17b %></td>
+        <td><%= q.q1_19 %></td>
+        <td><%= q.q2_1 %></td>
+        <td><%= q.q2_2 %></td>
+        <td><%= q.q3_9c %></td>
+        <td><%= q.q7_3 %></td>
+        <td><%= q.inc_bw %></td>
+        <td><%= q.inc_all %></td>
+        <td><%= q.q9_11_bw %></td>
+        <td><%= q.q10_1 %></td>
+        <td><%= q.q10_9 %></td>
+        <td><%= q.q10_10 %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

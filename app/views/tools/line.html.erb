@@ -1,0 +1,36 @@
+<h1>Tools</h1>
+<p>
+  Questions: <%= @questions.join(', ') %><br />
+  Rounds: <%= @rounds.join(', ') %>
+</p>
+<% 
+# Format array the way that Google wants it
+expanded_array = @data.inspect.html_safe.to_s
+formatted_array = expanded_array.gsub(', nil', ', null') %>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart", "table"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable(<%= formatted_array.html_safe %>);
+
+    var chart_options = {
+      chartArea: {left: 0, top: 0, height: '95%', width: "85%"}
+    };
+    var table_options = {
+      width: 825
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    chart.draw(data, chart_options);
+
+    var table = new google.visualization.Table(document.getElementById('table_div'));
+      table.draw(data, table_options);
+  }
+</script>
+
+<div id="chart_div" style="height: 390px; width: 825px; border: 1px solid black"></div>
+<div id="table_div" style="width: 825px; border: 1px solid silver;"></div>
+
+Formatted array: <%= formatted_array %>

@@ -1,0 +1,12 @@
+<h1>Concern Worldwide</h1>
+<p>
+  <%= @count %> questionnaires in the database.<br />
+  <%= link_to 'List questionnaires', :action => 'list' %><br />
+  <%= link_to 'Import questionnaires', :action => 'import' %>
+</p>
+<p>
+  Rails environment: <%= Rails.env %><br />
+  Rails version: <%= Rails::VERSION::STRING %><br />
+  Ruby version: <%= RUBY_VERSION %><br />
+  Log level: <%= Rails.logger.level %>
+</p>

@@ -1,0 +1,13 @@
+<h3>Import a CSV File</h3>
+  <%= form_tag '/admin/import', :multipart => true do %>
+    <%= file_field_tag :file %>
+    <%= submit_tag "Import CSV" %>
+  <% end %>
+</div>
+<p>
+  <%= @count %> questionnaires in the database.
+</p>
+<p>
+  Output:<br />
+  <%= @output %>
+</p>

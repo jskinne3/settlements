@@ -1,0 +1,54 @@
+<style>
+  td {text-align: right;}
+</style>
+<%= form_tag do %>
+  <table>
+    <tr>
+      <td>Question:</td>
+      <td><%= select_tag :question, options_for_select(@question_options, @question) %></td>
+      <td>Group by:</td>
+      <td><%= select_tag :bar_meaning, options_for_select(@bar_meaning_options, @bar_meaning) %></td>
+    </tr>
+    <tr>
+      <td colspan="5"><%= submit_tag 'Chart this data' %></td>
+    </tr>
+  </table>
+<% end %>
+<% if @data %>
+  <% # Format array the way that Google wants it
+  expanded_array = @data.inspect.html_safe.to_s
+  formatted_array = expanded_array.gsub(', nil', ', null') %>
+
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart", "table"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable(<%= formatted_array.html_safe %>);
+
+      var chart_options = {
+        bar: { groupWidth: '75%' },
+        isStacked: true
+      };
+      var table_options = {
+        width: 825
+      };
+
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      chart.draw(data, chart_options);
+
+      var table = new google.visualization.Table(document.getElementById('table_div'));
+        table.draw(data, table_options);
+    }
+  </script>
+
+  <div id="chart_div" style="height: 392px; width: 825px; border: 1px solid black"></div>
+  <div id="table_div" style="width: 825px; margin-top: 10px;"></div>
+  <p>
+    question: <%= @question %><br />
+    bar meaning: <%= @bar_meaning %><br />
+    color meanings: <%= @color_meanings.join(', ') %></br >
+    bar names: <%= @bar_names.join(', ') %><br />
+    Formatted array: <%= formatted_array %>
+  </p>
+<% end %>
