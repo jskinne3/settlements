@@ -1,60 +1,133 @@
-<style>
-  td {text-align: right;}
-  select{width: 150px;}
-</style>
-<%= form_tag do %>
-  <table>
-    <tr>
-      <td>Question:</td>
-      <td><%= select_tag :question, options_for_select(@question_options, @question) %></td>
-      <td>Group by:</td>
-      <td><%= select_tag :bar_meaning, options_for_select(@bar_meaning_options, @bar_meaning) %></td>
-    </tr>
-    <tr>
-      <td>Units:</td>
-      <td><%= select_tag :unit, options_for_select(@unit_options, @unit) %></td>
-      <td>Stacking:</td>
-      <td><%= select_tag :stack_bars, options_for_select(['stacked bars', 'unstacked'], params[:stack_bars]) %></td>
-    <tr>
-      <td colspan="5"><%= submit_tag 'Chart this data' %></td>
-    </tr>
-  </table>
-<% end %>
+<header>
+  <%= form_tag do %>
+    <table style="float: right;">
+      <tr>
+        <td>Question:</td>
+        <td><%= select_tag :question, options_for_select(@question_options, @question) %></td>
+        <td>Group by:</td>
+        <td><%= select_tag :bar_meaning, options_for_select(@bar_meaning_options, @bar_meaning) %></td>
+      </tr>
+      <tr>
+        <td>Units:</td>
+        <td><%= select_tag :unit, options_for_select(@unit_options, @unit) %></td>
+        <td>Stacking:</td>
+        <td><%= select_tag :stack_bars, options_for_select(['stacked bars', 'unstacked'], params[:stack_bars]) %></td>
+      <tr>
+        <td colspan="5"><%= submit_tag 'Chart this data' %></td>
+      </tr>
+    </table>
+    <div id="logo">
+      <%= image_tag 'https://www.concern.net/profiles/concern/themes/custom/concernnet/logo.png?1' %>
+    </div>
+  <% end %>
+</header>
 <% if @data %>
   <% # Format array the way that Google wants it
-  expanded_array = @data.inspect.html_safe.to_s
+  expanded_array = @data.to_json.html_safe.to_s
   formatted_array = expanded_array.gsub(', nil', ', null') %>
+  <div style="background-color: white; position: relative;">
+    <div style="padding: 5px;">
+      P-value: <%= @pvalue %> (<%= @pvalue > 0.05 ? 'not ' : '' %>statistically significant)
+    </div>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart", "table"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(<%= formatted_array.html_safe %>);
 
-  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-  <script type="text/javascript">
-    google.load("visualization", "1", {packages:["corechart", "table"]});
-    google.setOnLoadCallback(drawChart);
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable(<%= formatted_array.html_safe %>);
+        var chart_options = {
+          bar: { groupWidth: '75%' },
+          isStacked: <%= params[:stack_bars] == 'stacked bars' %>,
+          series: [{color: '#A14F0C'}, {color: '#00A76D'}, {color: '#8E0042'}, {color: '#00734A'}]
+        };
+        var table_options = {
+          width: 825
+        };
 
-      var chart_options = {
-        bar: { groupWidth: '75%' },
-        isStacked: <%= params[:stack_bars] == 'stacked bars' %>
-      };
-      var table_options = {
-        width: 825
-      };
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, chart_options);
 
-      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-      chart.draw(data, chart_options);
-
-      var table = new google.visualization.Table(document.getElementById('table_div'));
-        table.draw(data, table_options);
-    }
-  </script>
-
-  <div id="chart_div" style="height: 392px; width: 825px; border: 1px solid black"></div>
-  <div id="table_div" style="width: 825px; margin-top: 10px;"></div>
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+          table.draw(data, table_options);
+      }
+    </script>
+    <% if @pvalue > 0.05 %>
+      <div style="position:absolute;left:300px;top:250px;font-size:20px;">
+        Trend is not statistically significant
+      </div>
+    <% end %>
+    <div id="chart_div" style="height: 392px; width: 100%;<%= @pvalue > 0.05 ? ' opacity: 0.4;' : '' %>">
+    </div>
+  </div>
+  <div id="table_div" style="width: 100%; margin-top: 10px;"></div>
   <p>
     question: <%= @question %><br />
     bar meaning: <%= @bar_meaning %><br />
     color meanings: <%= @color_meanings.join(', ') %></br >
     bar names: <%= @bar_names.join(', ') %><br />
-    Formatted array: <%= formatted_array %>
+    Formatted array: <%= formatted_array %><br />
+    stat_table: <%= @stat_table.to_json.html_safe.to_s %>
   </p>
+
+  <table border="1" style="float: left; margin-right: 10px;">
+    <caption>observed</caption>
+    <% row_totals = Array.new
+    for row in @stat_table %>
+      <tr>
+        <% for cell in row %>
+          <td>
+            <%= cell %>
+          </td>
+        <% end %>
+        <td style="background-color: silver;">
+          <% row_totals << row.sum %>
+          <%= row.sum %>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <% column_totals = @stat_table.transpose.map{|r| r.sum}
+      for t in column_totals %>
+        <td style="background-color: silver;">
+          <%= t %>
+        </td>
+      <% end %>
+      <td>
+        <%= grid_total = column_totals.sum %>
+      </td>
+    </tr>
+  </table>
+
+  <table border="1">
+    <caption>expected</caption>
+    <% for row_total in row_totals
+      row_expectations = Array.new %>
+      <tr>
+        <% for column_total in column_totals %>
+          <td>
+            <% expectation = (row_total.to_f*column_total.to_f)/grid_total.to_f 
+              row_expectations << expectation %>
+            <%= expectation %>
+          </td>
+        <% end %>
+        <td style="background-color: silver;">
+          <%= row_expectations.sum %>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <% for c in column_totals %>
+        <td>
+          <%= c.to_f %>
+        </td>
+      <% end %>
+      <td><%= column_totals.sum %></td>
+    </tr>
+  </table>
+  <p>
+  observed_list: <%= @observed_list.join(', ') %><br />
+  expected_list: <%= @expected_list.join(', ') %>
+</p>
+
 <% end %>
