@@ -25,10 +25,7 @@
   <% # Format array the way that Google wants it
   expanded_array = @data.to_json.html_safe.to_s
   formatted_array = expanded_array.gsub(', nil', ', null') %>
-  <div style="background-color: white; position: relative;">
-    <div style="padding: 5px;">
-      P-value: <%= @pvalue %> (<%= @pvalue > 0.05 ? 'not ' : '' %>statistically significant)
-    </div>
+  <div style="background-color: white; position: relative; padding-bottom: 10px;">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart", "table"]});
@@ -52,12 +49,32 @@
           table.draw(data, table_options);
       }
     </script>
-    <% if @pvalue > 0.05 %>
+    <% if false #if @pvalue > 0.05 %>
       <div style="position:absolute;left:300px;top:250px;font-size:20px;">
         Trend is not statistically significant
       </div>
     <% end %>
-    <div id="chart_div" style="height: 392px; width: 100%;<%= @pvalue > 0.05 ? ' opacity: 0.4;' : '' %>">
+    <div id="chart_div" style="height: 392px; width: 100%;">
+    </div>
+    <div style="height: 50px; padding: 10px;">
+      <div style="height: 45px; border: 1px solid black; padding: 5px; float: left; width: 120px; font-size: 8pt;">
+        P-value
+        <div style="font-size: 20pt;">
+          <%= "%.3f" % @pvalue %>
+        </div>
+      </div>
+      <div style="border: 1px dashed black; height: 45px; padding: 5px; margin-left: 140px; width: 728px;">
+        <% if @color_meanings.length < 2 %>
+          With zero degrees of freedom, a meaningful P-value could not be calculated.
+        <% else
+          if @pvalue > 0.05 %>
+            The trend is <span style="color: #8E0042;">not statistically significant</span> (p &gt; .05) suggesting that responses between <%= @bar_meaning == 'area' ? 'areas' : 'rounds' %> do not differ more than by chance.
+          <% else %>
+            The trend is statistically significant (p &lt; .05) suggesting that <%= @bar_meaning == 'area' ? 'area' : 'round' %> influences the responses to this question.
+          <% end %>
+          P-value was calculated with the &chi;&sup2; test using <%= pluralize(@color_meanings.length-1, 'degree') %> of freedom.
+        <% end %>
+      </div>
     </div>
   </div>
   <div id="table_div" style="width: 100%; margin-top: 10px;"></div>
@@ -126,8 +143,14 @@
     </tr>
   </table>
   <p>
-  observed_list: <%= @observed_list.join(', ') %><br />
-  expected_list: <%= @expected_list.join(', ') %>
-</p>
+    observed_list: <%= @observed_list.join(', ') %><br />
+    expected_list: <%= @expected_list.join(', ') %>
+  </p>
+
+  <h1>R test</h1>
+  <p>
+    P-value: <%= @p %>
+  </p>
+  <%= image_tag "/rbar.png" %>
 
 <% end %>

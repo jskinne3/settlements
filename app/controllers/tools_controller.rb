@@ -16,11 +16,6 @@ plot(mydata)
 dev.off()')
   end
 
-  def rbar
-    R.eval('')
-
-  end
-
   def index
     @q_count = Questionnaire.count
     @r_count = Questionnaire.count('rndn', :distinct => true)
@@ -57,7 +52,6 @@ dev.off()')
         row.unshift(bar_name) # Label each row
         @data << row
       end
-      @pvalue = 0.01
       @stat_table = @stat_table.transpose
       # Calculate expected results
       row_totals = @stat_table.map{|r| r.sum}
@@ -71,6 +65,16 @@ dev.off()')
       end
       # Flatten stat_table tables for comparison with expectations
       @observed_list = @stat_table.flatten
+
+      # Stuff in R
+      R.eval 'x <- read.csv("~/concern/public/john.csv")'
+      R.eval "y <- table(x$#{@bar_meaning}, x$#{@question})"
+      R.eval 'p <- chisq.test(y)$p.value'
+      R.eval 'png("~/concern/public/rbar.png", 490, 350)'
+      R.eval "plot(x$#{@bar_meaning}, x$#{@question})"
+      R.eval 'dev.off()'
+      @pvalue = R.pull 'p'
+
     end
   end
 
