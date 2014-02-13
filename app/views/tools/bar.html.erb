@@ -26,6 +26,10 @@
   expanded_array = @data.to_json.html_safe.to_s
   formatted_array = expanded_array.gsub(', nil', ', null') %>
   <div style="background-color: white; position: relative; padding-bottom: 10px;">
+    <p style="padding: 10px 10px 0 10px;">
+      <span style="font-weight: bold;">Question <%= @question %>:</span><br />
+      <%= @question_text %>
+    </p>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart", "table"]});
@@ -78,79 +82,11 @@
     </div>
   </div>
   <div id="table_div" style="width: 100%; margin-top: 10px;"></div>
-  <p>
-    question: <%= @question %><br />
-    bar meaning: <%= @bar_meaning %><br />
-    color meanings: <%= @color_meanings.join(', ') %></br >
-    bar names: <%= @bar_names.join(', ') %><br />
-    Formatted array: <%= formatted_array %><br />
-    stat_table: <%= @stat_table.to_json.html_safe.to_s %>
-  </p>
-
-  <table border="1" style="float: left; margin-right: 10px;">
-    <caption>observed</caption>
-    <% row_totals = Array.new
-    for row in @stat_table %>
-      <tr>
-        <% for cell in row %>
-          <td>
-            <%= cell %>
-          </td>
-        <% end %>
-        <td style="background-color: silver;">
-          <% row_totals << row.sum %>
-          <%= row.sum %>
-        </td>
-      </tr>
-    <% end %>
-    <tr>
-      <% column_totals = @stat_table.transpose.map{|r| r.sum}
-      for t in column_totals %>
-        <td style="background-color: silver;">
-          <%= t %>
-        </td>
-      <% end %>
-      <td>
-        <%= grid_total = column_totals.sum %>
-      </td>
-    </tr>
-  </table>
-
-  <table border="1">
-    <caption>expected</caption>
-    <% for row_total in row_totals
-      row_expectations = Array.new %>
-      <tr>
-        <% for column_total in column_totals %>
-          <td>
-            <% expectation = (row_total.to_f*column_total.to_f)/grid_total.to_f 
-              row_expectations << expectation %>
-            <%= expectation %>
-          </td>
-        <% end %>
-        <td style="background-color: silver;">
-          <%= row_expectations.sum %>
-        </td>
-      </tr>
-    <% end %>
-    <tr>
-      <% for c in column_totals %>
-        <td>
-          <%= c.to_f %>
-        </td>
-      <% end %>
-      <td><%= column_totals.sum %></td>
-    </tr>
-  </table>
-  <p>
-    observed_list: <%= @observed_list.join(', ') %><br />
-    expected_list: <%= @expected_list.join(', ') %>
-  </p>
-
-  <h1>R test</h1>
-  <p>
-    P-value: <%= @p %>
-  </p>
-  <%= image_tag "/rbar.png" %>
-
+<% else %>
+  <div style="background-color: white; height: 180px; text-align: right; padding: 120px 30px 0 0;">
+    Submit query to begin &#11014;
+  </div>
 <% end %>
+<div style="padding: 20px 0 10px 0; font-size: 9pt; text-align: center">
+  Page loaded <%= Time.now.strftime('%c') %>
+</div>

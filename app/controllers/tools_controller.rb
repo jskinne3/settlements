@@ -3,8 +3,60 @@ class ToolsController < ApplicationController
   require 'rubygems'
   require 'rinruby'
 
-  BinaryQuestions = ['q3_6', 'q3_9a', 'q3_9b', 'q3_9c', 'q3_9d', 'q3_9e', 'q3_9f', 'q4_3', 'q4_5', 'q4_7', 'q4_9', 'q4_19', 'q4_20', 'q4_21', 'q5_1', 'q7_1a', 'q7_1b', 'q7_1c', 'q7_1d', 'q7_1e', 'q7_1f', 'q7_1g', 'q10_1', 'q10_1a', 'q10_2', 'q10_3', 'q10_4', 'q10_5', 'q10_6', 'q10_7', 'q10_8', 'q10_9', 'q10_10']
-  TextQuestions = ['q2_1', 'q2_7', 'q3_1', 'q3_2', 'q3_10', 'q4_1', 'q6_1', 'q6_2', 'q6_3', 'q6_4', 'q6_5', 'q6_6', 'q7_3', 'q7_4', 'q7_5', 'q7_6', 'q9_1']
+  BinaryQuestions = {
+    'q3_6'  => 'Does your HH pay to use the toilet facility?',
+    'q3_9a' => 'Yesterday did you wash your hands with soap after visiting toilet?',
+    'q3_9b' => 'Yesterday did you wash your hands with soap before eating?',
+    'q3_9c' => 'Yesterday did you wash your hands with soap before preparing food?',
+    'q3_9d' => "Yesterday did you wash your hands with soap after handling child's waste?",
+    'q3_9e' => 'Yesterday did you wash your hands with soap before feeding a child?',
+    'q3_9f' => 'Yesterday did you wash your hands with soap after eating?',
+    'q4_3'  => 'Did you consume a meal prepared outside the home yesterday (day & night)?',
+    'q4_5'  => 'Did you eat cooked food purchased from the streets yesterday?',
+    'q4_7'  => 'Did children in your household eat a meal served outside the home yesterday?',
+    'q4_9'  => 'Did children eat cooked food purchased from the streets yesterday?',
+    'q4_19' => 'In the past 4 weeks, did your household get relief food from any source?',
+    'q4_20' => 'In the past 4 weeks, has your household been enrolled in any social safety net? (e.g. merry go round)',
+    'q4_21' => 'In the past 4 weeks, did any child in the household benefit from a feeding program?',
+    'q5_1'  => 'Has any member of your household (adult or child) been ill in the last 2 weeks?',
+    'q7_1a' => 'Has your household or any member experienced fire in the last 4 weeks?',
+    'q7_1b' => 'Has your household or any member experienced floods in the last 4 weeks?',
+    'q7_1c' => 'Has your household or any member experienced mugging/stabbing in the last 4 weeks?',
+    'q7_1d' => "Has your household or any member experienced buglary/'poof' in the last 4 weeks?",
+    'q7_1e' => 'Has your household or any member experienced eviction in the last 4 weeks?',
+    'q7_1f' => 'Has your household or any member experienced property destruction in the last 4 weeks?',
+    'q7_1g' => 'Has your household or any member experienced rape/sodomy in the last 4 weeks?',
+    'q10_1' => 'In the last 4 weeks have you purchased food or other essential household goods on credit because you didn’t have the money to buy them outright?',
+    'q10_1a'=> 'Have you taken a loan to buy food or other essential HH goods in the last 4 weeks?',
+    'q10_2' => 'Have you had to remove any of your children from school due to lack of school related costs in the last 4 weeks?',
+    'q10_3' => 'Has any member of your household left/moved due to lack of resources to maintain them in the last 4 weeks?',
+    'q10_4' => 'Have you or any member of your household gone out begging for food or money in the last 4 weeks?',
+    'q10_5' => 'Have you or any household member traded sex for money or food in the last 4 weeks?',
+    'q10_6' => 'Have you or any household member had multiple sexual partners in the last 4 weeks?',
+    'q10_7' => 'Do you know someone in the community who had sex for money or food in the last month in the last 4 weeks?',
+    'q10_8' => 'Have you or any household member stolen food or money to buy food in the last 4 weeks?',
+    'q10_9' => 'Do you know someone in the community who stole food or money to buy food in the last one month?',
+    'q10_10'=> 'Have you or any household member received food or money from friend/neighbor/relative in the last 4 weeks?'
+  }
+  TextQuestions = {
+    'q2_1'  => 'What is the main source of drinking water members of your household have used in the last 2 weeks?',
+    'q2_7'  => 'How would you rate the quality of water from your usual source in the last one week?',
+    'q3_1'  => 'What kind of toilet facility has your household mainly/most commonly used during the day in the last 4 weeks?',
+    'q3_2'  => 'What kind of toilet facility does your household mainly/most commonly used at night in the last 4 weeks',
+    'q3_10' => 'Where has your household MAINLY disposed of garbage in the last 4 weeks?',
+    'q4_1'  => 'In the last 4 weeks, what was the main source of food for your household?',
+    'q6_1'  => 'How often have you had disputes with any person in the household in the last four weeks?',
+    'q6_2'  => 'What was the severity of the dispute?',
+    'q6_3'  => 'How often have you or another HH member had disputes with friends/neighbours outside your husehold in the last four weeks?',
+    'q6_4'  => 'What was the severity of the dispute?',
+    'q6_5'  => 'How often in the last 4 weeks have you shared food with your neighbours?',
+    'q6_6'  => 'How often in the last 4 weeks has your neighbour shared food with you?',
+    'q7_3'  => 'How often have you felt scared walking in the community in the last 4 weeks?',
+    'q7_4'  => 'How often have you felt scared being in your house in the last 4 weeks?',
+    'q7_5'  => 'How often have you/household member used avoidance measures in the last 4 weeks due to insecurity such as using escorts, using unusual routes, coming home earlier than usual etc?',
+    'q7_6'  => 'How would you rate security situation in the community?',
+    'q9_1'  => 'What is the main source of livelihood for your household in the past 4 weeks?'
+  }
 
   def rinruby_test
     R.eval('age <- c(25, 30, 56)
@@ -23,10 +75,12 @@ dev.off()')
   end
 
   def bar
-    @question_options = TextQuestions + BinaryQuestions
+    all_questions = TextQuestions.merge(BinaryQuestions)
+    @question_options = all_questions.keys.sort
     @bar_meaning_options = ['area', 'rndn']
     @unit_options = ['number of answers', 'percent']
     @question = (params[:question].blank? ? 'q10_1a' : params[:question])
+    @question_text = all_questions[@question.to_s]
     @bar_meaning = (params[:bar_meaning].blank? ? 'area' : params[:bar_meaning])
     @unit = (params[:unit].blank? ? 'percent' : params[:unit])
     if request.post?
@@ -35,7 +89,6 @@ dev.off()')
       @bar_names = @questionnaires.map{|q|q[@bar_meaning.to_sym]}.uniq
       # Container and header for chart data
       @data = [[@bar_meaning]+@color_meanings.map{|m| m.to_s}]
-      @stat_table = Array.new # Used to calculate p-value
       for bar_name in @bar_names
         # To create each bar in the chart, select all the questionnaires where area or rndn is a given name.
         qs_for_bar = @questionnaires.select{|q| q[@bar_meaning.to_sym] == bar_name}
@@ -44,7 +97,6 @@ dev.off()')
           # To create each region of a bar, count the questionnaires where the question is answered in a given way.
           row << qs_for_bar.select{|q| q[@question.to_sym] == answer}.count
         end
-        @stat_table << row.dup # Used to calculate p-value. Use dup to avoid later manipulations of the rows, like labeling.
         if @unit == 'percent'
           sum = row.sum
           row = row.map{|n| ("%.2f" % ((n.to_f/sum.to_f)*100.0)).to_f}
@@ -52,29 +104,11 @@ dev.off()')
         row.unshift(bar_name) # Label each row
         @data << row
       end
-      @stat_table = @stat_table.transpose
-      # Calculate expected results
-      row_totals = @stat_table.map{|r| r.sum}
-      col_totals = @stat_table.transpose.map{|r| r.sum}
-      grid_total = row_totals.sum
-      @expected_list = Array.new 
-      for row_total in row_totals
-        for col_total in col_totals
-          @expected_list << (row_total.to_f*col_total.to_f)/grid_total.to_f 
-        end
-      end
-      # Flatten stat_table tables for comparison with expectations
-      @observed_list = @stat_table.flatten
-
-      # Stuff in R
+      # Calculate P-value with R
       R.eval 'x <- read.csv("~/concern/public/john.csv")'
       R.eval "y <- table(x$#{@bar_meaning}, x$#{@question})"
       R.eval 'p <- chisq.test(y)$p.value'
-      R.eval 'png("~/concern/public/rbar.png", 490, 350)'
-      R.eval "plot(x$#{@bar_meaning}, x$#{@question})"
-      R.eval 'dev.off()'
       @pvalue = R.pull 'p'
-
     end
   end
 
