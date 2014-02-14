@@ -59,13 +59,13 @@ class ToolsController < ApplicationController
   }
 
   def rinruby_test
-    R.eval('age <- c(25, 30, 56)
-gender <- c("male", "female", "male")
-height <- c(160, 110, 220) 
-mydata <- data.frame(age,gender,height)
-png("~/concern/public/sample.png", 490, 350) 
-plot(mydata)
-dev.off()')
+#    R.eval('age <- c(25, 30, 56)
+#gender <- c("male", "female", "male")
+#height <- c(160, 110, 220) 
+#mydata <- data.frame(age,gender,height)
+#png("~/concern/public/sample.png", 490, 350) 
+#plot(mydata)
+#dev.off()')
   end
 
   def index
