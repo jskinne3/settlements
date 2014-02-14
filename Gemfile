@@ -9,7 +9,6 @@ gem 'rails', '3.2.16'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'mysql2', '0.3.13'
 #gem 'rinruby'
 gem 'json'
 
@@ -23,6 +22,14 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
+end
+
+group :development do
+  gem 'mysql2', '0.3.13'
+end
+
+group :production do
+  gem 'pg'
 end
 
 gem 'jquery-rails'
