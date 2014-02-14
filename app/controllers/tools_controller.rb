@@ -1,5 +1,7 @@
 class ToolsController < ApplicationController
 
+  before_filter :authorize
+
   require 'rubygems'
   #require 'rinruby'
 

@@ -1,0 +1,10 @@
+<h1>Login key</h1>
+<%= flash[:notice] %>
+<%= form_tag '/admin/login' do %>
+  <p>
+	<%= password_field_tag 'key' %>
+  </p>
+  <p>
+	<%= submit_tag "Enter" %>
+  </p>
+<% end %>

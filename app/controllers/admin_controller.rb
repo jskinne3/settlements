@@ -1,5 +1,29 @@
 class AdminController < ApplicationController
 
+  before_filter :authorize, :except => [:authorize, :login, :logout]
+
+  def login
+    if request.post?
+      if params[:key].blank?
+        flash[:notice] = 'No key entered.'
+      else
+        if params[:key] == 'ConcernWW'
+          flash[:notice] = 'Key accepted for login.'
+          session[:key] = 'hK78tsq$55.2y9'
+          redirect_to :controller => 'tools', :action => 'bar'
+        else
+          flash[:notice] = 'Incorrect key.'
+        end
+      end
+    end
+  end
+
+  def logout
+    session[:key] = nil
+    flash[:notice] = 'You have been logged out.'
+    redirect_to :action => 'login'
+  end
+
   def index
     @count = Questionnaire.count
   end
@@ -95,8 +119,8 @@ class AdminController < ApplicationController
           q.save
         end
       end
-      @count = Questionnaire.count
     end
+    @count = Questionnaire.count
   end
 
   private
