@@ -1,7 +1,7 @@
 class ToolsController < ApplicationController
 
   require 'rubygems'
-  require 'rinruby'
+  #require 'rinruby'
 
   BinaryQuestions = {
     'q3_6'  => 'Does your HH pay to use the toilet facility?',
@@ -105,10 +105,11 @@ dev.off()')
         @data << row
       end
       # Calculate P-value with R
-      R.eval 'x <- read.csv("~/concern/public/john.csv")'
-      R.eval "y <- table(x$#{@bar_meaning}, x$#{@question})"
-      R.eval 'p <- chisq.test(y)$p.value'
-      @pvalue = R.pull 'p'
+      #R.eval 'x <- read.csv("~/concern/public/john.csv")'
+      #R.eval "y <- table(x$#{@bar_meaning}, x$#{@question})"
+      #R.eval 'p <- chisq.test(y)$p.value'
+      #@pvalue = R.pull 'p'
+      @pvalue = 0.001
     end
   end
 

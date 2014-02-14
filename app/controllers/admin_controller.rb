@@ -14,8 +14,9 @@ class AdminController < ApplicationController
       @output = Array.new
       csv_file = params[:file].tempfile.to_s
       csv_text = File.read(params[:file].path)
-      csv = CSV.parse(csv_text, :headers => true)
-      csv.each do |row|
+      #csv = CSV.parse(csv_text, :headers => true)
+      #csv.each do |row|
+      csv_text.split("\n").each do |row|
         row = row.to_s.split(',')
         unless row[0] == 'rndn'
           q = Questionnaire.new
