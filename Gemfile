@@ -4,11 +4,12 @@ source 'http://rubygems.org'
 #gem 'rack'
 
 gem 'rails', '3.2.16'
+#gem 'rake', '~> 10.0.3'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+gem 'mysql2', '0.3.13'
 gem 'rinruby'
 gem 'json'
 
