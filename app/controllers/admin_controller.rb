@@ -116,6 +116,11 @@ class AdminController < ApplicationController
           q.q10_8    = yn(row[69])
           q.q10_9    = yn(row[70])
           q.q10_10   = yn(row[71])
+          q.under_15 = row[73]
+          q.all_ages = row[74]
+          q.mos_in_home= row[75]
+          q.ltrs     = row[78]
+          q.ltrsppn  = row[79]
           q.save
         end
       end

@@ -20,6 +20,8 @@ class CreateQuestionnaires < ActiveRecord::Migration
       t.integer :q9_2
       t.integer :inc_bw, :inc_all, :q9_3_bw, :q9_4_bw, :q9_9_bw, :q9_10_bw, :q9_11_bw
       t.boolean :q10_1, :q10_1a, :q10_2, :q10_3, :q10_4, :q10_5, :q10_6, :q10_7, :q10_8, :q10_9, :q10_10
+      t.integer :under_15, :all_ages, :mos_in_home, :ltrs
+      t.float   :ltrsppn
     end
   end
 end

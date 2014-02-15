@@ -77,6 +77,8 @@ class ToolsController < ApplicationController
   end
 
   def bar
+    # TODO: consider adding a way to superimpose or otherwise compare two questions so that 
+    # connections between them can be examined.
     all_questions = TextQuestions.merge(BinaryQuestions)
     @question_options = all_questions.keys.sort
     @bar_meaning_options = ['area', 'rndn']
@@ -116,6 +118,37 @@ class ToolsController < ApplicationController
   end
 
   def line
+    @question_options = ['inc_bw', 'inc_all', 'mos_in_home', 'ltrs', 'ltrsppn']
+    @question = (params[:question].blank? ? 'inc_all' : params[:question])
+    if request.post?
+      @questionnaires = Questionnaire.all
+      @rounds = @questionnaires.map{|q|q.rndn}.uniq
+      #@data = [['round', @question, 'top', 'bottom']]
+      @data = Array.new
+      for round in @rounds
+        qs_in_round = @questionnaires.select{|q| q.rndn == round}
+        datapoints = qs_in_round.map{|q| q[@question.to_sym] }
+        #render :text => datapoints.inspect
+        #return
+        sum = datapoints.sum
+        n = datapoints.length.to_f
+        mean = sum / n
+        variance = datapoints.map{|i| (i-mean)**2 }.sum / n
+        std_deviation = Math.sqrt(variance)
+        @data << [
+          round,
+          mean.round,
+          datapoints.max,
+          datapoints.min,
+          (mean+std_deviation).round,
+          (mean-std_deviation).round
+        ]
+      end
+    end
+  end
+
+=begin
+  def line
     @questions = ['q3_6', 'q3_9a', 'q4_3', 'q7_1b', 'q10_1a']
     @questionnaires = Questionnaire.all
     @rounds = @questionnaires.map{|q|q.rndn}.uniq
@@ -135,5 +168,6 @@ class ToolsController < ApplicationController
     end
 
   end
+=end
 
 end

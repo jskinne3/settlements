@@ -1,36 +1,69 @@
-<h1>Tools</h1>
+<header>
+  <%= form_tag do %>
+    <table style="float: right;">
+      <tr>
+        <td>Question:</td>
+        <td><%= select_tag :question, options_for_select(@question_options, @question) %></td>
+      </tr>
+      <tr>
+        <td colspan="5"><%= submit_tag 'Chart this data' %></td>
+      </tr>
+    </table>
+    <div id="logo">
+      <%= image_tag 'https://www.concern.net/profiles/concern/themes/custom/concernnet/logo.png?1' %>
+    </div>
+  <% end %>
+</header>
 <p>
-  Questions: <%= @questions.join(', ') %><br />
-  Rounds: <%= @rounds.join(', ') %>
+  Rounds: <%= @rounds.join(', ') if @rounds %><br />
+  Question: <%= @question %>
 </p>
 <% 
 # Format array the way that Google wants it
 expanded_array = @data.inspect.html_safe.to_s
 formatted_array = expanded_array.gsub(', nil', ', null') %>
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-  google.load("visualization", "1", {packages:["corechart", "table"]});
-  google.setOnLoadCallback(drawChart);
-  function drawChart() {
-    var data = google.visualization.arrayToDataTable(<%= formatted_array.html_safe %>);
+<script type="text/javascript"
+        src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1',
+                                                                 'packages':['corechart']}]}"></script>
+<script>
+google.load("visualization", "1", {packages:["corechart", "table"]});
+google.setOnLoadCallback(drawChart);
+function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'round');
+    data.addColumn('number', '<%= @question %>');
+    data.addColumn({id:'lim', type:'number', role:'interval'});
+    data.addColumn({id:'lim', type:'number', role:'interval'});
+    data.addColumn({id:'std', type:'number', role:'interval'});
+    data.addColumn({id:'std', type:'number', role:'interval'});
 
-    var chart_options = {
-      chartArea: {left: 0, top: 0, height: '95%', width: "85%"}
+    data.addRows(<%= formatted_array.html_safe %>);
+
+    var options_lines = {
+        title: 'Line intervals, default',
+        curveType:'function',
+        lineWidth: 2,
+        intervals: { 'style':'area' }, // Use line intervals.
+        interval: {
+          'std': { 'style':'area', 'curveType':'function', 'fillOpacity':0.1 },
+          'lim': { 'style':'area', 'curveType':'function', 'fillOpacity':0.3 },
+        },
+        legend: 'none'
     };
+
     var table_options = {
-      width: 825
+        width: 825
     };
 
-    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-    chart.draw(data, chart_options);
+    var chart_lines = new google.visualization.LineChart(document.getElementById('chart_div'));
+    chart_lines.draw(data, options_lines);
 
     var table = new google.visualization.Table(document.getElementById('table_div'));
-      table.draw(data, table_options);
-  }
+    table.draw(data, table_options);
+}
 </script>
-
-<div id="chart_div" style="height: 390px; width: 825px; border: 1px solid black"></div>
-<div id="table_div" style="width: 825px; border: 1px solid silver;"></div>
+<div id="chart_div" style="height: 392px; width: 100%;"></div>
+<div id="table_div" style="width: 100%; margin-top: 10px;"></div>
 
 Formatted array: <%= formatted_array %>

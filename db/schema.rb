@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -85,6 +86,11 @@ ActiveRecord::Schema.define(:version => 20140130120057) do
     t.boolean "q10_8"
     t.boolean "q10_9"
     t.boolean "q10_10"
+    t.integer "under_15"
+    t.integer "all_ages"
+    t.integer "mos_in_home"
+    t.integer "ltrs"
+    t.float   "ltrsppn"
   end
 
 end
