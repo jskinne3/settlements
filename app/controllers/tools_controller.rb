@@ -128,6 +128,8 @@ class ToolsController < ApplicationController
     @question_options = NumberQuestions.keys
     @question = (params[:question].blank? ? 'inc_all' : params[:question])
     @question_text = NumberQuestions[@question.to_s]
+    @lim = (params[:lim] == '1')
+    @std = (params[:std] == '1')
     if request.post?
       @questionnaires = Questionnaire.all
       @rounds = @questionnaires.map{|q|q.rndn}.uniq
@@ -143,15 +145,19 @@ class ToolsController < ApplicationController
         mean = sum / n
         variance = datapoints.map{|i| (i-mean)**2 }.sum / n
         std_deviation = Math.sqrt(variance)
-        @data << [
-          round,
-          mean.round,
-          datapoints.max,
-          datapoints.min,
-          (mean+(std_deviation/2.0)).round,
-          (mean-(std_deviation/2.0)).round
-        ]
+        data_row = [round, mean.round]
+        if @lim
+          data_row << datapoints.max
+          data_row << datapoints.min
+        end
+        if @std
+          data_row << (mean+(std_deviation/2.0)).round
+          data_row << (mean-(std_deviation/2.0)).round
+        end
+        @data << data_row
       end
+    else
+      @lim, @std = false, true
     end
   end
 

@@ -6,6 +6,12 @@
         <td><%= select_tag :question, options_for_select(@question_options, @question) %></td>
       </tr>
       <tr>
+        <td></td>
+        <td style="text-align: left; font-size: 9pt;">
+          <%= check_box_tag :std, 1, @std %> <%= label_tag :std, 'Standard deviation' %><br />
+          <%= check_box_tag :lim, 1, @lim %> <%= label_tag :lim, 'Min and Max' %>
+        </td>
+      <tr>
         <td colspan="5"><%= submit_tag 'Chart this data' %></td>
       </tr>
     </table>
@@ -31,10 +37,14 @@
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'round');
         data.addColumn('number', '<%= @question %>');
-        data.addColumn({id:'lim', type:'number', role:'interval'});
-        data.addColumn({id:'lim', type:'number', role:'interval'});
-        data.addColumn({id:'std', type:'number', role:'interval'});
-        data.addColumn({id:'std', type:'number', role:'interval'});
+        <% if @lim %>
+          data.addColumn({id:'lim', type:'number', role:'interval'});
+          data.addColumn({id:'lim', type:'number', role:'interval'});
+        <% end
+        if @std %>
+          data.addColumn({id:'std', type:'number', role:'interval'});
+          data.addColumn({id:'std', type:'number', role:'interval'});
+        <% end %>
 
         data.addRows(<%= formatted_array.html_safe %>);
 
