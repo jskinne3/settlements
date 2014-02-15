@@ -59,6 +59,13 @@ class ToolsController < ApplicationController
     'q7_6'  => 'How would you rate security situation in the community?',
     'q9_1'  => 'What is the main source of livelihood for your household in the past 4 weeks?'
   }
+  NumberQuestions = {
+    'inc_bw' => 'tests....',
+    'inc_all' => '',
+    'mos_in_home' => '',
+    'ltrs' => '',
+    'ltrsppn' => ''
+  }
 
   def rinruby_test
 #    R.eval('age <- c(25, 30, 56)
@@ -118,8 +125,9 @@ class ToolsController < ApplicationController
   end
 
   def line
-    @question_options = ['inc_bw', 'inc_all', 'mos_in_home', 'ltrs', 'ltrsppn']
+    @question_options = NumberQuestions.keys
     @question = (params[:question].blank? ? 'inc_all' : params[:question])
+    @question_text = NumberQuestions[@question.to_s]
     if request.post?
       @questionnaires = Questionnaire.all
       @rounds = @questionnaires.map{|q|q.rndn}.uniq
@@ -127,7 +135,7 @@ class ToolsController < ApplicationController
       @data = Array.new
       for round in @rounds
         qs_in_round = @questionnaires.select{|q| q.rndn == round}
-        datapoints = qs_in_round.map{|q| q[@question.to_sym] }
+        datapoints = qs_in_round.map{|q| q[@question.to_sym] }.compact
         #render :text => datapoints.inspect
         #return
         sum = datapoints.sum
@@ -140,8 +148,8 @@ class ToolsController < ApplicationController
           mean.round,
           datapoints.max,
           datapoints.min,
-          (mean+std_deviation).round,
-          (mean-std_deviation).round
+          (mean+(std_deviation/2.0)).round,
+          (mean-(std_deviation/2.0)).round
         ]
       end
     end

@@ -22,8 +22,8 @@
     </div>
   <% end %>
 </header>
-<% if @data %>
-  <% # Format array the way that Google wants it
+<% if @data
+  # Format array the way that Google wants it
   expanded_array = @data.to_json.html_safe.to_s
   formatted_array = expanded_array.gsub(', nil', ', null') %>
   <div style="background-color: white; position: relative; padding-bottom: 10px;">
