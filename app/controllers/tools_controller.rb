@@ -60,11 +60,11 @@ class ToolsController < ApplicationController
     'q9_1'  => 'What is the main source of livelihood for your household in the past 4 weeks?'
   }
   NumberQuestions = {
-    'inc_bw' => 'tests....',
-    'inc_all' => '',
-    'mos_in_home' => '',
-    'ltrs' => '',
-    'ltrsppn' => ''
+    'inc_bw' => 'Breadwinner income',
+    'inc_all' => 'All income',
+    'mos_in_home' => 'Months living in current home',
+    'ltrs' => 'Litres of water used per day by household',
+    'ltrsppn' => 'Liters of water used per person per day'
   }
 
   def rinruby_test
