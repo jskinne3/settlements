@@ -88,21 +88,40 @@ class ToolsController < ApplicationController
     # connections between them can be examined.
     all_questions = TextQuestions.merge(BinaryQuestions)
     @question_options = all_questions.keys.sort
-    @bar_meaning_options = ['area', 'rndn']
+    @bar_meaning_options = ['area', 'rndn', 'inc_all']
     @unit_options = ['number of answers', 'percent']
     @question = (params[:question].blank? ? 'q10_1a' : params[:question])
     @question_text = all_questions[@question.to_s]
     @bar_meaning = (params[:bar_meaning].blank? ? 'area' : params[:bar_meaning])
     @unit = (params[:unit].blank? ? 'percent' : params[:unit])
     if request.post?
-      @questionnaires = Questionnaire.all
+      @questionnaires = Questionnaire.where("#{@bar_meaning} IS NOT NULL")
       @color_meanings = @questionnaires.map{|q| q[@question.to_sym]}.uniq
-      @bar_names = @questionnaires.map{|q|q[@bar_meaning.to_sym]}.uniq
+      if ((@bar_meaning == 'area') or (@bar_meaning == 'rndn'))
+        @bar_names = @questionnaires.map{|q|q[@bar_meaning.to_sym]}.uniq
+      else
+        #@bar_names = ['Q1', 'Q2', 'Q3', 'Q4']
+        @questionnaires.sort!{|a,b| a[@bar_meaning.to_sym]<=>b[@bar_meaning.to_sym]}
+        quartile_size = (@questionnaires.length / 4.0).to_i
+        quartiles, @bar_names = Array.new, Array.new
+        quartiles[0] = @questionnaires[0..quartile_size]
+        quartiles[1] = @questionnaires[quartile_size..quartile_size*2]
+        quartiles[2] = @questionnaires[quartile_size*2..quartile_size*3]
+        quartiles[3] = @questionnaires[quartile_size*3..-1]
+        quartiles.each_with_index do |range, i|
+          @bar_names << "#{range.first[@bar_meaning.to_sym]}–#{range.last[@bar_meaning.to_sym]}"
+        end
+      end
       # Container and header for chart data
       @data = [[@bar_meaning]+@color_meanings.map{|m| m.to_s}]
-      for bar_name in @bar_names
-        # To create each bar in the chart, select all the questionnaires where area or rndn is a given name.
-        qs_for_bar = @questionnaires.select{|q| q[@bar_meaning.to_sym] == bar_name}
+      @bar_names.each_with_index do |bar_name, i|
+        if ((@bar_meaning == 'area') or (@bar_meaning == 'rndn'))
+          # To create each bar in the chart, select all the questionnaires where area or rndn is a given name.
+          qs_for_bar = @questionnaires.select{|q| q[@bar_meaning.to_sym] == bar_name}
+        else
+          # Or select the questionnaires where inc_all is in the correct quartile.
+          qs_for_bar = quartiles[i]
+        end
         row = Array.new
         for answer in @color_meanings
           # To create each region of a bar, count the questionnaires where the question is answered in a given way.
