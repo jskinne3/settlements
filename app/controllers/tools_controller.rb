@@ -60,11 +60,15 @@ class ToolsController < ApplicationController
     'q9_1'  => 'What is the main source of livelihood for your household in the past 4 weeks?'
   }
   NumberQuestions = {
-    'inc_bw' => 'Breadwinner income',
-    'inc_all' => 'All income',
+    'inc_bw'      => 'Breadwinner income',
+    'inc_all'     => 'All household income',
     'mos_in_home' => 'Months living in current home',
-    'ltrs' => 'Litres of water used per day by household',
-    'ltrsppn' => 'Liters of water used per person per day'
+    'ltrs'        => 'Litres of water used per day by household',
+    'ltrsppn'     => 'Liters of water used per person per day'
+  }
+  BackgroundQuestions = {
+    'area' => 'Settlement area',
+    'rndn' => 'Questionnaire round'
   }
 
   def rinruby_test
@@ -84,11 +88,11 @@ class ToolsController < ApplicationController
   end
 
   def bar
-    # TODO: consider adding a way to superimpose or otherwise compare two questions so that 
+    # TODO: make a way to superimpose or otherwise compare two questions so that 
     # connections between them can be examined.
     all_questions = TextQuestions.merge(BinaryQuestions)
     @question_options = all_questions.keys.sort
-    @bar_meaning_options = ['area', 'rndn', 'inc_all', 'inc_bw', 'mos_in_home', 'ltrs', 'ltrsppn']
+    @bar_meaning_options = NumberQuestions.merge(BackgroundQuestions).keys
     @unit_options = ['number of answers', 'percent']
     @question = (params[:question].blank? ? 'q10_1a' : params[:question])
     @question_text = all_questions[@question.to_s]
@@ -103,13 +107,14 @@ class ToolsController < ApplicationController
       else
         #@bar_names = ['Q1', 'Q2', 'Q3', 'Q4']
         @questionnaires.sort!{|a,b| a[@bar_meaning.to_sym]<=>b[@bar_meaning.to_sym]}
-        quartile_size = (@questionnaires.length / 4.0).to_i
-        quartiles, @bar_names = Array.new, Array.new
-        quartiles[0] = @questionnaires[0..quartile_size]
-        quartiles[1] = @questionnaires[quartile_size..quartile_size*2]
-        quartiles[2] = @questionnaires[quartile_size*2..quartile_size*3]
-        quartiles[3] = @questionnaires[quartile_size*3..-1]
-        quartiles.each_with_index do |range, i|
+        quintile_size = (@questionnaires.length / 5.0).to_i
+        quintiles, @bar_names = Array.new, Array.new
+        quintiles[0] = @questionnaires[0..quintile_size]
+        quintiles[1] = @questionnaires[quintile_size..quintile_size*2]
+        quintiles[2] = @questionnaires[quintile_size*2..quintile_size*3]
+        quintiles[3] = @questionnaires[quintile_size*2..quintile_size*4]
+        quintiles[4] = @questionnaires[quintile_size*4..-1]
+        quintiles.each_with_index do |range, i|
           @bar_names << "#{range.first[@bar_meaning.to_sym]}–#{range.last[@bar_meaning.to_sym]}"
         end
       end
@@ -121,7 +126,7 @@ class ToolsController < ApplicationController
           qs_for_bar = @questionnaires.select{|q| q[@bar_meaning.to_sym] == bar_name}
         else
           # Or select the questionnaires where inc_all is in the correct quartile.
-          qs_for_bar = quartiles[i]
+          qs_for_bar = quintiles[i]
         end
         row = Array.new
         for answer in @color_meanings

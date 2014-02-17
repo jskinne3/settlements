@@ -156,7 +156,6 @@ class AdminController < ApplicationController
     end
     @count = Questionnaire.count
   end
-=end
 
   private
 
@@ -169,5 +168,7 @@ class AdminController < ApplicationController
       return nil
     end
   end
+  
+=end
 
 end
