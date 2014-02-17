@@ -88,13 +88,14 @@ class ToolsController < ApplicationController
     # connections between them can be examined.
     all_questions = TextQuestions.merge(BinaryQuestions)
     @question_options = all_questions.keys.sort
-    @bar_meaning_options = ['area', 'rndn', 'inc_all']
+    @bar_meaning_options = ['area', 'rndn', 'inc_all', 'inc_bw', 'mos_in_home', 'ltrs', 'ltrsppn']
     @unit_options = ['number of answers', 'percent']
     @question = (params[:question].blank? ? 'q10_1a' : params[:question])
     @question_text = all_questions[@question.to_s]
     @bar_meaning = (params[:bar_meaning].blank? ? 'area' : params[:bar_meaning])
     @unit = (params[:unit].blank? ? 'percent' : params[:unit])
-    if request.post?
+    @stack_bars = (params[:stack_bars] == 'unstacked' ? false : true)
+    if (request.post? or params[:graphed] == '1') 
       @questionnaires = Questionnaire.where("#{@bar_meaning} IS NOT NULL")
       @color_meanings = @questionnaires.map{|q| q[@question.to_sym]}.uniq
       if ((@bar_meaning == 'area') or (@bar_meaning == 'rndn'))

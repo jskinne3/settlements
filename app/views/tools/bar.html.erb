@@ -40,7 +40,7 @@
 
         var chart_options = {
           bar: { groupWidth: '75%' },
-          isStacked: <%= params[:stack_bars] == 'stacked bars' %>,
+          isStacked: <%= @stack_bars %>,
           series: [{color: '#A14F0C'}, {color: '#00A76D'}, {color: '#8E0042'}, {color: '#00734A'}]
         };
         var table_options = {
