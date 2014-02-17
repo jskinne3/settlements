@@ -33,6 +33,11 @@
 </head>
 <body>
 <div id="content">
+<% if flash[:notice] %>
+  <div style="background-color: black; color: white; padding: 7px; margin-top: 5px; margin-bottom: 7px;">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
 <%= yield %>
 <% unless session[:key].blank? %>
 <div style="padding: 10px 0 0 0; font-size: 9pt; text-align: center">

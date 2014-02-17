@@ -1,13 +1,15 @@
 <h3>Import a CSV File</h3>
+<p>
+  There are <strong><%= @count %></strong> questionnaires in the database.
+</p>
+<div style="border: 1px solid gray; padding: 7px; margin-top: 7px;">
+  Do you want to add questionnaires with a CSV?<br />
   <%= form_tag '/admin/import', :multipart => true do %>
-    <%= file_field_tag :file %>
+    <%= file_field_tag :file %><br />
     <%= submit_tag "Import CSV" %>
   <% end %>
 </div>
-<p>
-  <%= @count %> questionnaires in the database.
-</p>
-<p>
-  Output:<br />
-  <%= @output %>
-</p>
+<div style="border: 1px solid gray; padding: 7px; margin-top: 7px;">
+  Do you want to delete the existing questionnaires?<br />
+  <%= link_to 'Delete questionnaires', :action => 'delete_all' %>
+</div>

@@ -35,6 +35,35 @@ class AdminController < ApplicationController
 
   def import
     if request.post?
+      unless params[:file]
+        flash[:notice] = "No file selected."
+        return
+      else
+        flash[:notice] = nil
+      end
+      @output = Array.new
+      Questionnaire.import(params[:file])
+    end
+    @count = Questionnaire.count
+  end
+
+  def delete_all
+    first_count = Questionnaire.count
+    if request.post?
+      for q in Questionnaire.all
+        q.delete
+      end
+      @count = Questionnaire.count
+      flash[:notice] = "Questionnaire table decreased by #{first_count - @count} rows."
+    else
+      @count = Questionnaire.count
+      flash[:notice] = nil
+    end
+  end
+
+=begin
+  def old_import
+    if request.post?
       @output = Array.new
       csv_file = params[:file].tempfile.to_s
       csv_text = File.read(params[:file].path)
@@ -127,6 +156,7 @@ class AdminController < ApplicationController
     end
     @count = Questionnaire.count
   end
+=end
 
   private
 
