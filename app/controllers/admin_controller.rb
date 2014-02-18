@@ -7,7 +7,7 @@ class AdminController < ApplicationController
       if params[:key].blank?
         flash[:notice] = 'No key entered.'
       else
-        if params[:key] == 'ConcernWW'
+        if params[:key] == ENV['KEY']
           flash[:notice] = 'Key accepted for login.'
           session[:key] = 'hK78tsq$55.2y9'
           redirect_to :controller => 'tools', :action => 'bar'
