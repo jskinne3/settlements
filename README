@@ -1,6 +1,7 @@
 Settlements is a statistical tool for the analyses of data gathered from household surveys in informal settlements in urban Africa. Its job is to help aid workers and researchers spot oncoming crisis situations before they are obvious.
 
 Technologies used:
-- R 3.0
-- Rails 2.0
+- R 3.0.2
+- Ruby 2.0.0
+- Rails 3.2.16
 - Google charts
