@@ -139,6 +139,13 @@ class ToolsController < ApplicationController
         end
         row.unshift(bar_name) # Label each row
         @data << row
+        # Replace color meaning db names with human-friendly names
+        @data[0].map! do |heading|
+          heading = 'no' if heading == 'false'
+          heading = 'yes' if heading == 'true'
+          heading = 'N/A' if heading == ''
+          heading # Return final heading name from the block.
+        end
       end
       # Calculate P-value with R
       #R.eval 'x <- read.csv("~/concern/public/john.csv")'
