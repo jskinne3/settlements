@@ -92,7 +92,8 @@ class ToolsController < ApplicationController
     # connections between them can be examined.
     all_questions = TextQuestions.merge(BinaryQuestions)
     @question_options = all_questions.keys.sort
-    @bar_meaning_options = NumberQuestions.merge(BackgroundQuestions).keys
+    bar_meanings_hash = NumberQuestions.merge(BackgroundQuestions)
+    @bar_meaning_options = bar_meanings_hash.keys
     @unit_options = ['number of answers', 'percent']
     @question = (params[:question].blank? ? 'q10_1a' : params[:question])
     @question_text = all_questions[@question.to_s]
@@ -139,14 +140,15 @@ class ToolsController < ApplicationController
         end
         row.unshift(bar_name) # Label each row
         @data << row
-        # Replace color meaning db names with human-friendly names
-        @data[0].map! do |heading|
-          heading = 'no' if heading == 'false'
-          heading = 'yes' if heading == 'true'
-          heading = 'N/A' if heading == ''
-          heading # Return final heading name from the block.
-        end
       end
+      # Replace table headings db names with human-friendly names
+      @data[0].map! do |heading|
+        heading = 'no' if heading == 'false'
+        heading = 'yes' if heading == 'true'
+        heading = 'N/A' if heading == ''
+        heading # Return final heading name from the block.
+      end
+      @bar_meaning_name = bar_meanings_hash[@bar_meaning] # Human-readable caption for x-axis.
       # Calculate P-value with R
       #R.eval 'x <- read.csv("~/concern/public/john.csv")'
       #R.eval "y <- table(x$#{@bar_meaning}, x$#{@question})"
