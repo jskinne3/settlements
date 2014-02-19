@@ -1,0 +1,63 @@
+<h1>Chart</h1>
+<div style="height: 500px; width: 100%;">
+  <div style="float: left; border: 1px solid silver;">
+
+    <table>
+      <tr>
+        <td>
+          x axis
+        </td>
+        <td>
+          <%= select_tag :x, options_for_select(@x_axis_options.invert, params[:x]) %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          y axis
+        </td>
+        <td>
+          <%= select_tag :y, options_for_select(@y_axis_options.invert, params[:y]) %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          unit
+        </td>
+        <td>
+          <%= select_tag :unit, options_for_select(@unit_options, @unit) %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          stack
+        </td>
+        <td>
+          <%= select_tag :stack_bars, options_for_select(['stacked bars', 'unstacked'], params[:stack_bars]) %>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td style="font-size: 8pt; text-align: left;">
+          <%= check_box_tag :std, 1, @std %> <%= label_tag :std, 'standard deviation' %>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td style="font-size: 8pt; text-align: left;">
+          <%= check_box_tag :lim, 1, @lim %> <%= label_tag :lim, 'min and max' %>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td style="text-align: left;">
+          <%= submit_tag 'Chart' %>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="float: right; background-color: white;">
+    Chart type: <%= @chart_type %>
+    <div id="chart_div" style="height: 392px; width: 650px; border: 1px solid black;"></div>
+  </div>
+</div>

@@ -71,6 +71,48 @@ class ToolsController < ApplicationController
     'rndn' => 'Questionnaire round'
   }
 
+  def chart
+
+    background = BackgroundQuestions
+    continuous = NumberQuestions
+    basic_catg = TextQuestions.merge(BinaryQuestions)
+    expan_catg = basic_catg.merge(background)
+    xintervals = continuous.merge(background)
+    all_fields = continuous.merge(expan_catg)
+
+    @x_axis_options = xintervals
+    @y_axis_options = all_fields
+
+    @unit = (params[:unit].blank? ? 'percent' : params[:unit])
+    @unit_options = ['number of answers', 'percent']
+    @stack_bars = (params[:stack_bars] == 'unstacked' ? false : true)
+
+    if request.post?
+      if expan_catg.include?(params[:y])
+        if background.keys.include?(params[:x])
+          # y is cat  & x is cat:  Standart bar chart - each bar represents an area or round, height represents responses to categorical questions
+          @chart_type = 'bar with areas or rounds on the x-axis'
+        elsif continuous.keys.include?(params[:x])
+          # y is cat  & x is cont: Bart chart with quantiles - each bar represents a cont divided into 5 buckets, height represents responses to categorical questions
+          @chart_type = 'bar with quartiles on the x-axis'
+        end
+      elsif continuous.keys.include?(params[:y])
+        if params[:x] == 'rndn'
+          # y is cont & x is cont: Line chart - rounds (time) along the x axis, height represents cont/numeric mean.
+          @chart_type = 'line'
+        else
+          # y is cont & x is cat:  Dot chart - area, or maybe cont divided into 5 buckets, but not time, along the x-axis; height represents cont/numeric mean.
+          @chart_type = 'dot'
+        end
+      end
+
+      unless @chart_type
+        @chart_type = "Error --- x is '#{params[:x]}' and y is '#{params[:y]}'"
+      end 
+
+    end
+  end
+
   def rinruby_test
 #    R.eval('age <- c(25, 30, 56)
 #gender <- c("male", "female", "male")
