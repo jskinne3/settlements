@@ -8,7 +8,7 @@
           </td>
           <td>
             <% x_select = Hash[@x_axis_options.map{|i| [field_name_hash[i], i]}] %>
-            <%= select_tag :x, options_for_select(x_select) %>
+            <%= select_tag :x, options_for_select(x_select, params[:x]) %>
           </td>
         </tr>
         <tr>
@@ -40,7 +40,7 @@
               'Coping' =>
               Hash[@y_axis_options[75..84].map{|i| [field_name_hash[i], i]}]
             } %>
-            <%= select_tag :y, grouped_options_for_select(y_select) %>
+            <%= select_tag :y, grouped_options_for_select(y_select, params[:y]) %>
           </td>
         </tr>
         <tr>
@@ -177,9 +177,4 @@
       <% end %>
     </div>
   </div>
-  <p style="padding-top: 25px;"><%= @chart_table %></p>
-  <p>
-    Y axis data type: <%= @y_type %><br />
-    Chart type: <%= @chart_type %>
-  </p>
 <% end %>
