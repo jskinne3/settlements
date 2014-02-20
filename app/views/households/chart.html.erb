@@ -1,5 +1,5 @@
 <h1>Chart household data</h1>
-<div style="height: 500px; width: 100%;">
+<div style="height: 405px; width: 100%;">
   <div style="float: left; border: 1px solid silver;">
     <%= form_tag do |f| %>
       <table>
@@ -21,10 +21,10 @@
         </tr>
         <tr>
           <td>
-            unit
+            units
           </td>
           <td>
-            <%= select_tag :unit, options_for_select(@units_options, params[:units]) %>
+            <%= select_tag :units, options_for_select(@units_options, params[:units]) %>
           </td>
         </tr>
         <tr>
@@ -38,13 +38,13 @@
         <tr>
           <td></td>
           <td style="font-size: 8pt; text-align: left;">
-            <%= check_box_tag :std, 1, @std %> <%= label_tag :std, 'standard deviation' %>
+            <%= check_box_tag :std, 1, params[:std] %> <%= label_tag :std, 'standard deviation' %>
           </td>
         </tr>
         <tr>
           <td></td>
           <td style="font-size: 8pt; text-align: left;">
-            <%= check_box_tag :lim, 1, @lim %> <%= label_tag :lim, 'min and max' %>
+            <%= check_box_tag :med, 1, params[:med] %> <%= label_tag :med, 'median' %>
           </td>
         </tr>
         <tr>
@@ -55,10 +55,71 @@
         </tr>
       </table>
     <% end %>
+    Y axis data type: <%= @y_type %><br />
+    Chart type: <%= @chart_type %>
   </div>
-
-  <div style="float: right; background-color: white;">
-    Y axis data type: <%= @y_type %>
-    <div id="chart_div" style="height: 392px; width: 650px; border: 1px solid black;"></div>
-  </div>
+  <% if @chart_table
+    # Format array the way that Google wants it
+    expanded_table = @chart_table.to_json.html_safe.to_s
+    formatted_table = expanded_table.gsub(', nil', ', null') %>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart", "table"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        <% if @chart_type == 'bar' %>
+          var data = google.visualization.arrayToDataTable(<%= formatted_table.html_safe %>);
+          var chart_options = {
+            title: '<%= @chart_title %>',
+            bar: { groupWidth: '75%' },
+            isStacked: '<%= params[:stack_bars] == "stacked bars" %>',
+            series: [{color: '#A14F0C'}, {color: '#00A76D'}, {color: '#8E0042'}, {color: '#00734A'}],
+            hAxis: {title: '<%= params[:x] %>',  titleTextStyle: {color: 'black'}}
+          };
+          var bar_chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+          bar_chart.draw(data, chart_options);
+        <% else %>
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', '<%= params[:x] %>');
+          data.addColumn('number', '<%= params[:y] %>');
+          <% if params[:std] == '1' %>
+            data.addColumn({id:'std', type:'number', role:'interval'});
+            data.addColumn({id:'std', type:'number', role:'interval'});
+          <% end %>
+          data.addRows(<%= formatted_table.html_safe %>);
+          var chart_options = {
+            title: '<%= @chart_title %>',
+            curveType:'function',
+            lineWidth: 2,
+            intervals: { 'color':'series-color' },
+            interval: {
+              'lim': { 'style':'area', 'curveType':'function', 'fillOpacity':0.1 },
+              'std': { 'style':'area', 'curveType':'function' }
+            },
+            series: [{color: '#00A76D'}],
+            legend: 'none',
+            hAxis: {title: '<%= params[:x] %>',  titleTextStyle: {color: 'black'}}
+          };
+          var line_chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+          line_chart.draw(data, chart_options);
+        <% end %>
+        var table_options = {
+          width: 648
+        };
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+          table.draw(data, table_options);
+      }
+    </script>
+    <div style="float: right; background-color: white; width: 670px;">
+      <div id="chart_div" style="height: 392px; width: 100%;"></div>
+    </div>
+  <% else %>
+    <div style="float: right; background-color: white; width: 670px; height: 300px;">
+      <div style="text-align: center; margin-top: 120px;">
+        Submit query to begin
+      </div>
+    </div>
+  <% end %>
 </div>
+<div id="table_div" style="width: 100%; margin-top: 10px;"></div>
+<p><%= @chart_table %></p>
