@@ -1,14 +1,14 @@
-<h1>Chart household data</h1>
 <div style="height: 405px; width: 100%;">
-  <div style="float: left; border: 1px solid silver;">
+  <div style="float: left;">
     <%= form_tag do |f| %>
-      <table>
+      <table cellpadding="0" cellspacing="0">
         <tr>
-          <td>
+          <td style="padding-right: 5px;">
             x axis
           </td>
           <td>
-            <%= select_tag :x, options_for_select(@x_axis_options, params[:x]) %>
+            <% x_select = Hash[@x_axis_options.map{|i| [field_name_hash[i], i]}] %>
+            <%= select_tag :x, options_for_select(x_select) %>
           </td>
         </tr>
         <tr>
@@ -16,12 +16,13 @@
             y axis
           </td>
           <td>
-            <%= select_tag :y, options_for_select(@y_axis_options, params[:y]) %>
+            <% y_select = Hash[@y_axis_options.map{|i| [field_name_hash[i], i]}] %>
+            <%= select_tag :y, options_for_select(y_select) %>
           </td>
         </tr>
         <tr>
           <td></td>
-          <td style="text-align: left;">bar chart options</td>
+          <td style="padding-top: 10px">bar chart options</td>
         </td>
         <tr>
           <td>
@@ -41,35 +42,33 @@
         </tr>
         <tr>
           <td></td>
-          <td style="text-align: left;">line chart options</td>
+          <td style="padding-top: 10px">line chart options</td>
         </td>
         <tr>
           <td></td>
-          <td style="font-size: 8pt; text-align: left;">
+          <td style="font-size: 8pt;">
             <%= check_box_tag :std, 1, params[:std] %> <%= label_tag :std, 'standard deviation' %>
           </td>
         </tr>
         <tr>
           <td></td>
-          <td style="font-size: 8pt; text-align: left;">
+          <td style="font-size: 8pt;">
             <%= check_box_tag :med, 1, params[:med] %> <%= label_tag :med, 'median' %>
           </td>
         </tr>
         <tr>
           <td></td>
-          <td style="text-align: left;">
+          <td style="padding-top: 10px">
             <%= submit_tag 'Chart' %>
           </td>
         </tr>
       </table>
     <% end %>
-    Y axis data type: <%= @y_type %><br />
-    Chart type: <%= @chart_type %>
   </div>
   <% if @chart_table
     # Human-readable axis names
     x, y = field_title(params[:x]), field_title(params[:y])
-    chart_title = "#{x} in each #{y}"
+    chart_title = y
     # Format array the way that Google wants it
     expanded_table = @chart_table.to_json.html_safe.to_s
     formatted_table = expanded_table.gsub(', nil', ', null') %>
@@ -125,7 +124,7 @@
       <div id="chart_div" style="height: 392px; width: 100%;"></div>
     </div>
   <% else %>
-    <div style="float: right; background-color: white; width: 100%; height: 300px;">
+    <div style="float: right; background-color: white; width: 670px; height: 300px;">
       <div style="text-align: center; margin-top: 120px;">
         Submit query to begin
       </div>
@@ -155,5 +154,9 @@
       <% end %>
     </div>
   </div>
-  <p><%= @chart_table %></p>
+  <p style="padding-top: 25px;"><%= @chart_table %></p>
+  <p>
+    Y axis data type: <%= @y_type %><br />
+    Chart type: <%= @chart_type %>
+  </p>
 <% end %>

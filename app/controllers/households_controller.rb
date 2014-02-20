@@ -46,8 +46,12 @@ class HouseholdsController < ApplicationController
       if @chart_type == 'bar'
         @chart_table.unshift([y]+possible_answers.map{|a| a.blank? ? 'N/A' : a.to_s}) # Label bars/columns
       end
+      @pvalue = 0.001 # Fake p-value for now
+    else
+      params[:std] ||= 1
+      params[:x] ||= 'rnd'
+      params[:y] ||= 'q6_5'
     end
-    @pvalue = 0.001 # Fake p-value for now
   end
 
   def list
