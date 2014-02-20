@@ -16,8 +16,31 @@
             y axis
           </td>
           <td>
-            <% y_select = Hash[@y_axis_options.map{|i| [field_name_hash[i], i]}] %>
-            <%= select_tag :y, options_for_select(y_select) %>
+            <% y_select = {
+              'Demographics' =>
+              Hash[@y_axis_options[1..5].map{|i| [field_name_hash[i], i]}],
+              'Water' =>
+              Hash[@y_axis_options[6..14].map{|i| [field_name_hash[i], i]}],
+              'Hygiene' =>
+              Hash[@y_axis_options[15..24].map{|i| [field_name_hash[i], i]}],
+              'Food' =>
+              Hash[@y_axis_options[25..39].map{|i| [field_name_hash[i], i]}],
+              'Health' =>
+              Hash[@y_axis_options[40..43].map{|i| [field_name_hash[i], i]}],
+              'Relationships' =>
+              Hash[@y_axis_options[44..47].map{|i| [field_name_hash[i], i]}],
+              'Shocks' =>
+              Hash[@y_axis_options[48..55].map{|i| [field_name_hash[i], i]}],
+              'Security' =>
+              Hash[@y_axis_options[56..59].map{|i| [field_name_hash[i], i]}],
+              'Housing' =>
+              Hash[@y_axis_options[60..60].map{|i| [field_name_hash[i], i]}],
+              'Livelihoods' => 
+              Hash[@y_axis_options[61..74].map{|i| [field_name_hash[i], i]}],
+              'Coping' =>
+              Hash[@y_axis_options[75..84].map{|i| [field_name_hash[i], i]}]
+            } %>
+            <%= select_tag :y, grouped_options_for_select(y_select) %>
           </td>
         </tr>
         <tr>
