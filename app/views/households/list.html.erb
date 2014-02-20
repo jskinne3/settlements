@@ -1,0 +1,48 @@
+<h1>Household database records</h1>
+<p>
+  <%= @count %> household records listed below.
+  <% if @count == 0 %>
+    <%= link_to 'Import .csv of household data', :action => 'import' %>
+  <% else %>
+    <% link_to 'Delete household data', :action => 'delete_all' %>
+  <% end %>
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>area</th>
+      <th>rnd</th>
+      <th>city</th>
+      <th>objectid</th>
+      <th>inc_all_q5</th>
+      <th>yrs_in_homec</th>
+      <th>yrs_in_home</th>
+      <th>q9_1</th>
+      <th>q10_all</th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <td colspan="10" style="border-top: 1px solid black; text-align: center;">
+        <%= @count %> household records listed
+      </td>
+    </tr>
+  </tfoot>
+  <tbody>
+    <% for hh in @households %>
+      <tr>
+        <td><%= hh.id %></th>
+        <td><%= hh.area %></td>
+        <td><%= hh.rnd %></td>
+        <td><%= hh.city %></td>
+        <td><%= hh.objectid %></td>
+        <td><%= hh.inc_all_q5 %></td>
+        <td><%= hh.yrs_in_homec %></td>
+        <td><%= hh.yrs_in_home %></td>
+        <td><%= hh.q9_1 %></td>
+        <td><%= hh.q10_all %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

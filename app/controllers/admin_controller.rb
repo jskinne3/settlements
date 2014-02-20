@@ -4,15 +4,13 @@ class AdminController < ApplicationController
 
   def login
     if request.post?
-      #render :text => ENV['ConcernKey'].inspect
-      #return
       if params[:key].blank?
         flash[:notice] = 'No key entered.'
       else
         if (params[:key] == ENV['Ckey'] or params[:key] == ENV['Bkey'])
           flash[:notice] = 'Key accepted for login.'
           session[:key] = 'hK78tsq$55.2y9'
-          redirect_to :controller => 'tools', :action => 'bar'
+          redirect_to :controller => 'households', :action => 'index'
         else
           flash[:notice] = 'Incorrect key.'
         end

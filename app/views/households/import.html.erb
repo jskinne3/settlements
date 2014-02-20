@@ -1,0 +1,18 @@
+<h3>Import a .csv File</h3>
+<p>
+  There are <strong><%= @count %></strong> household records in the database.
+  <% if @count > 0 %>
+  	<%= link_to 'View them.', :action => 'list' %>
+  <% end %>
+</p>
+<div style="border: 1px solid gray; padding: 7px; margin-top: 7px;">
+  Do you want to add household data with a .csv?<br />
+  <%= form_tag '/households/import', :multipart => true do %>
+    <%= file_field_tag :file %><br />
+    <%= submit_tag "Import file" %>
+  <% end %>
+</div>
+<div style="border: 1px solid gray; padding: 7px; margin-top: 7px;">
+  Do you want to delete the existing household data?<br />
+  <%= link_to 'Delete database records', :action => 'delete_all' %>
+</div>

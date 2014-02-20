@@ -1,0 +1,13 @@
+<h1>Household servey data</h1>
+<p>
+  <%= @count %> households in the database.<br />
+  <%= link_to 'List household data', :action => 'list' %><br />
+  <%= link_to 'Import household data', :action => 'import' %><br />
+  <%= link_to 'Delete household data', :action => 'delete_all' %><br />
+</p>
+<p>
+  Rails environment: <%= Rails.env %><br />
+  Rails version: <%= Rails::VERSION::STRING %><br />
+  Ruby version: <%= RUBY_VERSION %><br />
+  Log level: <%= Rails.logger.level %><br />
+</p>

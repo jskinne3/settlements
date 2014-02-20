@@ -1,0 +1,13 @@
+<h1>Delete all household data from the database</h1>
+<p>
+  Are you sure you want to delete everything in the households table?
+</p>
+<%= form_tag '/households/delete_all' do %>
+  <%= submit_tag "Yes, delete all household records" %>
+<% end %>
+<p>
+  There are <strong><%= @count %></strong> household records in the database now.
+  <% if @count == 0 %>
+    <%= link_to 'Import .csv data file?', :action => 'import' %>
+  <% end %>
+</p>
