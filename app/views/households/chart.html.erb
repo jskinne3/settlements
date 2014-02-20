@@ -20,6 +20,10 @@
           </td>
         </tr>
         <tr>
+          <td></td>
+          <td style="text-align: left;">bar chart options</td>
+        </td>
+        <tr>
           <td>
             units
           </td>
@@ -35,6 +39,10 @@
             <%= select_tag :stack_bars, options_for_select(@stack_options, params[:stack_bars]) %>
           </td>
         </tr>
+        <tr>
+          <td></td>
+          <td style="text-align: left;">line chart options</td>
+        </td>
         <tr>
           <td></td>
           <td style="font-size: 8pt; text-align: left;">
@@ -59,6 +67,9 @@
     Chart type: <%= @chart_type %>
   </div>
   <% if @chart_table
+    # Human-readable axis names
+    x, y = field_title(params[:x]), field_title(params[:y])
+    chart_title = "#{x} in each #{y}"
     # Format array the way that Google wants it
     expanded_table = @chart_table.to_json.html_safe.to_s
     formatted_table = expanded_table.gsub(', nil', ', null') %>
@@ -70,25 +81,25 @@
         <% if @chart_type == 'bar' %>
           var data = google.visualization.arrayToDataTable(<%= formatted_table.html_safe %>);
           var chart_options = {
-            title: '<%= @chart_title %>',
+            title: '<%= chart_title %>',
             bar: { groupWidth: '75%' },
             isStacked: '<%= params[:stack_bars] == "stacked bars" %>',
             series: [{color: '#A14F0C'}, {color: '#00A76D'}, {color: '#8E0042'}, {color: '#00734A'}],
-            hAxis: {title: '<%= params[:x] %>',  titleTextStyle: {color: 'black'}}
+            hAxis: {title: '<%= x %>',  titleTextStyle: {color: 'black'}}
           };
           var bar_chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
           bar_chart.draw(data, chart_options);
         <% else %>
           var data = new google.visualization.DataTable();
-          data.addColumn('string', '<%= params[:x] %>');
-          data.addColumn('number', '<%= params[:y] %>');
+          data.addColumn('string', '<%= x %>');
+          data.addColumn('number', '<%= y %>');
           <% if params[:std] == '1' %>
             data.addColumn({id:'std', type:'number', role:'interval'});
             data.addColumn({id:'std', type:'number', role:'interval'});
           <% end %>
           data.addRows(<%= formatted_table.html_safe %>);
           var chart_options = {
-            title: '<%= @chart_title %>',
+            title: '<%= chart_title %>',
             curveType:'function',
             lineWidth: 2,
             intervals: { 'color':'series-color' },
@@ -98,7 +109,7 @@
             },
             series: [{color: '#00A76D'}],
             legend: 'none',
-            hAxis: {title: '<%= params[:x] %>',  titleTextStyle: {color: 'black'}}
+            hAxis: {title: '<%= x %>',  titleTextStyle: {color: 'black'}}
           };
           var line_chart = new google.visualization.LineChart(document.getElementById('chart_div'));
           line_chart.draw(data, chart_options);
@@ -114,12 +125,35 @@
       <div id="chart_div" style="height: 392px; width: 100%;"></div>
     </div>
   <% else %>
-    <div style="float: right; background-color: white; width: 670px; height: 300px;">
+    <div style="float: right; background-color: white; width: 100%; height: 300px;">
       <div style="text-align: center; margin-top: 120px;">
         Submit query to begin
       </div>
     </div>
   <% end %>
 </div>
-<div id="table_div" style="width: 100%; margin-top: 10px;"></div>
-<p><%= @chart_table %></p>
+<% if @chart_table %>
+  <div id="table_div" style="width: 100%; margin-top: 10px;"></div>
+  <div style="height: 62px; padding-top: 15px;">
+    <div style="height: 60px; border: 1px solid black; padding: 5px; float: left; width: 120px; font-size: 8pt;">
+      P-value
+      <div style="font-size: 20pt;">
+        <%= "%.3f" % @pvalue %>
+      </div>
+    </div>
+    <div style="border: 1px dashed black; height: 60px; padding: 5px; margin-left: 145px; width: 741px;">
+      <% degrees_of_freedom = @chart_table.first.length - 2
+        if degrees_of_freedom == 0 %>
+        With zero degrees of freedom, a meaningful P-value could not be calculated.
+      <% else
+        if @pvalue > 0.05 %>
+          The trend is <span style="color: #8E0042;">not statistically significant</span> (p &gt; .05) suggesting that responses between <%= @bar_meaning == 'area' ? 'areas' : 'rounds' %> do not differ more than by chance.
+        <% else %>
+          The trend is statistically significant (p &lt; .05) suggesting that <%= @bar_meaning == 'area' ? 'area' : 'round' %> influences the responses to this question.
+        <% end %>
+        P-value was calculated with the &chi;&sup2; test using <%= pluralize(degrees_of_freedom, 'degree') %> of freedom. (This is fake right now because R is not running on the server)
+      <% end %>
+    </div>
+  </div>
+  <p><%= @chart_table %></p>
+<% end %>

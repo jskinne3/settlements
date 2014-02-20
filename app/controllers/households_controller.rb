@@ -9,10 +9,8 @@ class HouseholdsController < ApplicationController
     @y_axis_options = Household.y_field_names
     @units_options = ['percent', 'number of answers']
     @stack_options = ['stacked bars', 'unstacked']
-    x = params[:x] # TODO: Clean inputs to prevent SQL injection
-    y = params[:y]
     if (request.post? or params[:graphed] == '1')
-      @chart_title = "#{params[:y]} in each #{params[:x]}"
+      x, y = params[:x], params[:y] # TODO: Clean inputs to prevent SQL injection
       @y_type = Household.columns_hash[y.to_s].type
       @chart_type = (@y_type.to_s == 'integer' or @y_type.to_s == 'float') ? 'line' : 'bar'
       hh_data = Household.where("#{x} IS NOT NULL") # TODO: Add filtering
@@ -49,6 +47,7 @@ class HouseholdsController < ApplicationController
         @chart_table.unshift([y]+possible_answers.map{|a| a.blank? ? 'N/A' : a.to_s}) # Label bars/columns
       end
     end
+    @pvalue = 0.001 # Fake p-value for now
   end
 
   def list
