@@ -19,4 +19,12 @@ class Household < ActiveRecord::Base
     end
   end
 
+  def self.x_field_names
+    self.column_names[4..10]
+  end
+
+  def self.y_field_names
+    self.column_names[10..93]
+  end
+
 end

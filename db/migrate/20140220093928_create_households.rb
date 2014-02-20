@@ -10,7 +10,7 @@ class CreateHouseholds < ActiveRecord::Migration
       t.string  :rnd
       t.string  :city
       t.string  :inc_all_q5
-      t.boolean :q1_4b
+      t.string  :q1_4b
       t.string  :yrs_in_homec
       t.string  :edu_bw
       # Response (Y) Variables

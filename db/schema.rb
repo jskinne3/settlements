@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(:version => 20140220093928) do
     t.string   "rnd"
     t.string   "city"
     t.string   "inc_all_q5"
-    t.boolean  "q1_4b"
+    t.string   "q1_4b"
     t.string   "yrs_in_homec"
     t.string   "edu_bw"
     t.integer  "under_5"

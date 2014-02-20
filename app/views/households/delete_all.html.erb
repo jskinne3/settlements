@@ -9,5 +9,7 @@
   There are <strong><%= @count %></strong> household records in the database now.
   <% if @count == 0 %>
     <%= link_to 'Import .csv data file?', :action => 'import' %>
+  <% else %>
+    <%= link_to 'List them.', :action => 'list' %>
   <% end %>
 </p>

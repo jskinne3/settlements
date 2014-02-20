@@ -4,10 +4,10 @@
   <% if @count == 0 %>
     <%= link_to 'Import .csv of household data', :action => 'import' %>
   <% else %>
-    <% link_to 'Delete household data', :action => 'delete_all' %>
+    <%= link_to 'Chart this data', :action => 'chart' %> or, perhaps, <%= link_to 'delete it', :action => 'delete_all' %>.
   <% end %>
 </p>
-<table>
+<table style="width: 100%;">
   <thead>
     <tr>
       <th>id</th>
@@ -18,13 +18,15 @@
       <th>inc_all_q5</th>
       <th>yrs_in_homec</th>
       <th>yrs_in_home</th>
+      <th>q1_4b</th>
+      <th>q2_4</th>
       <th>q9_1</th>
       <th>q10_all</th>
     </tr>
   </thead>
   <tfoot>
     <tr>
-      <td colspan="10" style="border-top: 1px solid black; text-align: center;">
+      <td colspan="12" style="border-top: 1px solid black; text-align: center;">
         <%= @count %> household records listed
       </td>
     </tr>
@@ -40,6 +42,8 @@
         <td><%= hh.inc_all_q5 %></td>
         <td><%= hh.yrs_in_homec %></td>
         <td><%= hh.yrs_in_home %></td>
+        <td><%= hh.q1_4b %></td>
+        <td><%= hh.q2_4 %></td>
         <td><%= hh.q9_1 %></td>
         <td><%= hh.q10_all %></td>
       </tr>

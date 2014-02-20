@@ -4,6 +4,16 @@ class HouseholdsController < ApplicationController
     @count = Household.count
   end
 
+  def chart
+    @x_axis_options = Household.x_field_names
+    @y_axis_options = Household.y_field_names
+    @units_options = ['percent', 'number of answers']
+    @stack_options = ['stacked bars', 'unstacked']
+    if request.post?
+      @y_type = Household.columns_hash[params[:y].to_s].type
+    end
+  end
+
   def list
     @count = Household.count
     @households = Household.all
