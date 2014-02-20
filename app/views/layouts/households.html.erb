@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Concern</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <style>
+    html,body{
+      background-color: #E8E5D3;
+      font-family: 'PT Sans', Helvetica, Arial, 'Liberation Sans', FreeSans, sans-serif;;
+    }
+    body {
+      margin:0; padding:0px;
+      text-align:center;
+      }
+    #content {
+      width:900px;
+      margin:0px auto;
+      text-align:left;
+      }
+    td, th {
+      text-align: left;
+      margin: 0;
+      padding: 0;
+    }
+    select {width: 150px;}
+    header {
+      background-color: #00734A;
+      width: 100%;
+      margin-bottom: 25px;
+    }
+    select {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div style="width: 900px; margin:0px auto; text-align: left; padding: 5px;">
+    <%= image_tag 'https://www.concern.net/profiles/concern/themes/custom/concernnet/logo.png?1' %>
+  </div>
+</header>
+<div id="content">
+<% if flash[:notice] %>
+  <div style="background-color: black; color: white; padding: 7px; margin-top: 5px; margin-bottom: 7px;">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+<%= yield %>
+</div>
+</body>
+</html>
