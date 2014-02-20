@@ -49,8 +49,8 @@ class HouseholdsController < ApplicationController
       @pvalue = 0.001 # Fake p-value for now
     else
       params[:std] ||= 1
-      params[:x] ||= 'rnd'
-      params[:y] ||= 'q6_5'
+      params[:x] ||= 'inc_all_q5'
+      params[:y] ||= 'q9_1'
     end
   end
 
