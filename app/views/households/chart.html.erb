@@ -126,6 +126,9 @@
           <% if params[:std] == '1' %>
             data.addColumn({id:'std', type:'number', role:'interval'});
             data.addColumn({id:'std', type:'number', role:'interval'});
+          <% end
+          if params[:med] == '1' %>
+            data.addColumn({id:'med', type:'number'});
           <% end %>
           data.addRows(<%= formatted_table.html_safe %>);
           var chart_options = {

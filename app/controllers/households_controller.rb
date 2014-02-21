@@ -32,6 +32,10 @@ class HouseholdsController < ApplicationController
             row << (mean+(std_deviation/2.0)).round(2)
             row << (mean-(std_deviation/2.0)).round(2)
           end
+          if params[:med] == '1'
+            sorted = datapoints.sort
+            row << ((sorted[(n - 1) / 2] + sorted[n / 2.0]) / 2.0).round(2)
+          end
         else
           for answer in possible_answers
             row << data_in_interval.select{|d| d[y.to_sym] == answer}.count
