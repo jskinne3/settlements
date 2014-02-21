@@ -1,0 +1,17 @@
+<h1>IDSUE data gathered by Concern Worldwide</h1>
+<div style="height: 400px;">
+  <div style="float: left; padding-right: 20px;">
+    <%= image_tag 'team.jpg', {:style => 'border: 7px solid white; box-shadow: 1px 1px 5px black;', :alt => "Photograph of John and Barbara."} %>
+  </div>
+  <h3>&#9668; Building the website</h3>
+  <p>
+    Concern Worldwide data analyst Chebet Barbara Wambui and volunteer computer programmer John Skinner slice some data and write some code.
+  </p>
+  <p>
+    Nairobi &mdash; February 2014
+  </p>
+  <div style="padding-top: 140px;">
+    <%= link_to "Chart our data", :controller => 'households', :action => 'chart' %><%= link_to "&thinsp;&#9658;".html_safe, {:controller => 'households', :action => 'chart'}, {:style => 'text-decoration: none;'} %><br />
+    &copy; <%= Time.now.year %> Concern Worldwide
+  </div>
+</div>
