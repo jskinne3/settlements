@@ -3,8 +3,8 @@
     <%= form_tag do |f| %>
       <table cellpadding="0" cellspacing="0">
         <tr>
-          <td style="padding-right: 5px;">
-            x axis
+          <td style="padding-right: 3px;">
+            <%= label_tag :x, 'X axis' %>
           </td>
           <td>
             <% x_select = Hash[@x_axis_options.map{|i| [field_name_hash[i], i]}] %>
@@ -13,7 +13,7 @@
         </tr>
         <tr>
           <td>
-            y axis
+            <%= label_tag :y, 'Y axis' %>
           </td>
           <td>
             <% y_select = {
@@ -49,7 +49,7 @@
         </td>
         <tr>
           <td>
-            units
+            <%= label_tag :units %>
           </td>
           <td>
             <%= select_tag :units, options_for_select(@units_options, params[:units]) %>
@@ -57,10 +57,10 @@
         </tr>
         <tr>
           <td>
-            stack
+            <%= label_tag :stack %>
           </td>
           <td>
-            <%= select_tag :stack_bars, options_for_select(@stack_options, params[:stack_bars]) %>
+            <%= select_tag :stack, options_for_select(@stack_options, params[:stack]) %>
           </td>
         </tr>
         <tr>
@@ -82,7 +82,7 @@
         <tr>
           <td></td>
           <td style="padding-top: 10px">
-            <%= submit_tag 'Chart' %>
+            <%= submit_tag 'Chart', {} %>
           </td>
         </tr>
         <% if @count %>
@@ -113,7 +113,7 @@
           var chart_options = {
             title: '<%= chart_title %>',
             bar: { groupWidth: '75%' },
-            isStacked: '<%= params[:stack_bars] == "stacked bars" %>',
+            isStacked: '<%= params[:stack] == "s" %>',
             series: [{color: '#A14F0C'}, {color: '#00A76D'}, {color: '#8E0042'}, {color: '#00734A'}],
             hAxis: {title: '<%= x %>',  titleTextStyle: {color: 'black'}}
           };
@@ -187,5 +187,12 @@
         P-value was calculated with the &chi;&sup2; test using <%= pluralize(degrees_of_freedom, 'degree') %> of freedom. (This is fake right now because R is not running on the server)
       <% end %>
     </div>
+  </div>
+  <div style="padding-top: 25px; height: 20px;">
+    <% link = "#{root_url}households/chart?graphed=1&x=#{params[:x]}&y=#{params[:y]}&units=#{params[:units]}&stack=#{params[:stack]}#{'&std=1' unless params[:std].blank?}#{'&std=1' unless params[:med].blank?}" %>
+    <label for="link" style="float: left; padding-top: 5px;">
+      Link to this chart:
+    </label>
+    <input type="text" value="<%= link %>" name="link" id="link" style="width: 741px; float: right; padding: 5px;" />
   </div>
 <% end %>

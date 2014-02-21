@@ -1,7 +1,7 @@
 Concern::Application.routes.draw do
   match ':controller(/:action(.:format))'
 
-  root :to => "admin#index"
+  root :to => "households#index"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

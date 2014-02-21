@@ -7,8 +7,8 @@ class HouseholdsController < ApplicationController
   def chart
     @x_axis_options = Household.x_field_names
     @y_axis_options = Household.y_field_names
-    @units_options = ['percent', 'number of answers']
-    @stack_options = ['stacked bars', 'unstacked']
+    @units_options = {'Percent' => 'p', 'Number of answers' => 'n'}
+    @stack_options = {'Stacked bars' => 's', 'Unstacked' => 'u'}
     if (request.post? or params[:graphed] == '1')
       x, y = params[:x], params[:y] # TODO: Clean inputs to prevent SQL injection
       @y_type = Household.columns_hash[y.to_s].type
@@ -40,7 +40,7 @@ class HouseholdsController < ApplicationController
           for answer in possible_answers
             row << data_in_interval.select{|d| d[y.to_sym] == answer}.count
           end
-          if params[:units] == 'percent'
+          if params[:units] == 'p' # Calculate percents
             sum = row.sum.to_f
             row = row.map{|n| ("%.2f" % ((n.to_f/sum)*100.0)).to_f}
           end
