@@ -68,6 +68,9 @@ class HouseholdsController < ApplicationController
         flash[:notice] = nil
       end
       Household.import(params[:file])
+      flash[:notice] = "Imported #{params[:file].original_filename}"
+    else
+      flash[:notice] = nil
     end
     @count = Household.count
   end
