@@ -45,7 +45,7 @@
         </tr>
         <tr>
           <td></td>
-          <td style="padding-top: 10px; color: silver;">bar chart options</td>
+          <td style="padding-top: 10px; color: #00734A;">bar chart options</td>
         </td>
         <tr>
           <td>
@@ -65,7 +65,7 @@
         </tr>
         <tr>
           <td></td>
-          <td style="padding-top: 10px; color: silver;">line chart options</td>
+          <td style="padding-top: 10px; color: #00734A;">line chart options</td>
         </td>
         <tr>
           <td></td>
@@ -89,7 +89,7 @@
           <tr>
             <td></td>
             <td style="padding-top: 15px; font-size: 8pt;">
-              <%= number_with_delimiter(@count) %> responses used
+              <%= number_with_delimiter(@count) %> survey responses
             </td>
           </tr>
         <% end %>
@@ -154,13 +154,13 @@
           table.draw(data, table_options);
       }
     </script>
-    <div style="float: right; background-color: white; width: 670px;">
+    <div style="float: right; background-color: white; width: 670px; border: solid silver 1px;">
       <div id="chart_div" style="height: 392px; width: 100%;"></div>
     </div>
   <% else %>
-    <div style="float: right; background-color: white; width: 670px; height: 300px;">
-      <div style="text-align: center; margin-top: 120px;">
-        Submit query to begin
+    <div style="float: right; background-color: white; width: 670px; height: 230px; border: solid silver 1px;">
+      <div style="text-align: center; margin-top: 100px;">
+        &#9668; Submit query to begin
       </div>
     </div>
   <% end %>

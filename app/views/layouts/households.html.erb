@@ -11,9 +11,38 @@
       font-family: 'PT Sans', Helvetica, Arial, 'Liberation Sans', FreeSans, sans-serif;;
     }
     body {
-      margin:0; padding:0px;
+      margin: 0 0 100px;
+      padding:0px;
       text-align:center;
       }
+    html, body {height: 100%;}
+    /* sticky footer stuff */
+    #wrap {
+      min-height: 100%;
+    }
+    #main {
+      overflow:auto;
+      padding-bottom: 25px; /* must be same height as the footer */
+    }
+    footer {
+      position: relative;
+      margin-top: -25px; /* negative value of footer height */
+      height: 25px;
+      clear:both;
+      background-color: #00734A;
+    }
+    footer div {
+      padding-top: 3px;
+      width:900px;
+      margin:0px auto;
+      text-align:left;
+      font-size: 9pt;
+    }
+    footer div span {
+      float: right;
+      color: white;
+    }
+    /* end sticky footer stuff */
     #content {
       width:900px;
       margin:0px auto;
@@ -38,18 +67,32 @@
   </style>
 </head>
 <body>
-<header>
-  <div style="width: 900px; margin:0px auto; text-align: left; padding: 5px;">
-    <%= image_tag 'https://www.concern.net/profiles/concern/themes/custom/concernnet/logo.png?1' %>
+<div id="wrap">
+  <div id="main">
+    <header>
+      <div style="width: 900px; margin:0px auto; text-align: left; padding: 5px;">
+        <%= link_to image_tag('https://www.concern.net/profiles/concern/themes/custom/concernnet/logo.png?1'), :action => 'index' %>
+      </div>
+    </header>
+    <div id="content">
+    <% if flash[:notice] %>
+      <div style="background-color: black; color: white; padding: 7px; margin-top: 5px; margin-bottom: 7px;">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
+    <%= yield %>
+    </div>
   </div>
-</header>
-<div id="content">
-<% if flash[:notice] %>
-  <div style="background-color: black; color: white; padding: 7px; margin-top: 5px; margin-bottom: 7px;">
-    <%= flash[:notice] %>
-  </div>
-<% end %>
-<%= yield %>
 </div>
+<footer>
+  <div>
+    Page loaded <%= Time.now.strftime("%d %b %Y") %>
+    <span>
+      <%= link_to 'Index', {:action => 'index'}, {:style => 'text-decoration: none; color: white;'} %> |
+      <%= link_to 'Dev team', {:action => 'team'}, {:style => 'text-decoration: none; color: white;'} %> |
+      <%= link_to 'Logout', {:controller => 'admin', :action => 'logout'}, {:style => 'text-decoration: none; color: white;'} %>
+    </span>
+  </div>
+</footer>
 </body>
 </html>
