@@ -1,6 +1,6 @@
-<h3>Import a .csv File</h3>
+<h1>Import .csv file</h1>
 <p>
-  There are <strong><%= @count %></strong> household records in the database.
+  There are <strong><%= number_with_delimiter(@count) %></strong> household records in the database.
   <% if @count > 0 %>
   	<%= link_to 'View them.', :action => 'list' %>
   <% end %>
@@ -15,4 +15,8 @@
 <div style="border: 1px solid gray; padding: 7px; margin-top: 7px;">
   Do you want to delete the existing household data?<br />
   <%= link_to 'Delete database records', :action => 'delete_all' %>
+</div>
+<div style="margin-top: 7px;">
+  <%= link_to 'Chart data', :action => 'chart' %> |
+  <%= link_to 'Households index page', :action => 'index' %>
 </div>

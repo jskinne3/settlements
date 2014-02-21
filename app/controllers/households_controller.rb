@@ -14,6 +14,7 @@ class HouseholdsController < ApplicationController
       @y_type = Household.columns_hash[y.to_s].type
       @chart_type = (@y_type.to_s == 'integer' or @y_type.to_s == 'float') ? 'line' : 'bar'
       hh_data = Household.where("#{x} IS NOT NULL") # TODO: Add filtering
+      @count = hh_data.length
       possible_answers = hh_data.map{|d| d[y.to_sym]}.uniq
       @chart_table = Array.new
       intervals = hh_data.map{|d| d[x.to_sym]}.uniq.sort

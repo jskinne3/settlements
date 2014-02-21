@@ -45,7 +45,7 @@
         </tr>
         <tr>
           <td></td>
-          <td style="padding-top: 10px">bar chart options</td>
+          <td style="padding-top: 10px; color: silver;">bar chart options</td>
         </td>
         <tr>
           <td>
@@ -65,7 +65,7 @@
         </tr>
         <tr>
           <td></td>
-          <td style="padding-top: 10px">line chart options</td>
+          <td style="padding-top: 10px; color: silver;">line chart options</td>
         </td>
         <tr>
           <td></td>
@@ -85,6 +85,14 @@
             <%= submit_tag 'Chart' %>
           </td>
         </tr>
+        <% if @count %>
+          <tr>
+            <td></td>
+            <td style="padding-top: 15px; font-size: 8pt;">
+              <%= number_with_delimiter(@count) %> responses used
+            </td>
+          </tr>
+        <% end %>
       </table>
     <% end %>
   </div>

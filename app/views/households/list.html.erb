@@ -1,6 +1,6 @@
 <h1>Household database records</h1>
 <p>
-  <%= @count %> household records listed below.
+  <%= number_with_delimiter(@count) %> household records in the database. <%= number_with_delimiter(@households.length) %> listed below.
   <% if @count == 0 %>
     <%= link_to 'Import .csv of household data', :action => 'import' %>
   <% else %>
@@ -27,7 +27,7 @@
   <tfoot>
     <tr>
       <td colspan="12" style="border-top: 1px solid black; text-align: center;">
-        <%= @count %> household records listed
+        <%= number_with_delimiter(@households.length) %> household records listed
       </td>
     </tr>
   </tfoot>

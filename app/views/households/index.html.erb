@@ -1,6 +1,6 @@
-<h1>Household servey data</h1>
+<h1>Household survey data summary</h1>
 <p>
-  <%= @count %> households in the database.<br />
+  <strong><%= number_with_delimiter(@count) %></strong> households in the database.<br />
   <%= link_to 'List household data', :action => 'list' %><br />
   <%= link_to 'Import household data', :action => 'import' %><br />
   <%= link_to 'Chart household data', :action => 'chart' %><br />
