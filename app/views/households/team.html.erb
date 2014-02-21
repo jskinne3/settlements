@@ -10,8 +10,9 @@
   <p>
     Nairobi &mdash; February 2014
   </p>
-  <div style="padding-top: 140px;">
+  <div style="padding-top: 120px;">
     <%= link_to "Chart our data", :controller => 'households', :action => 'chart' %><%= link_to "&thinsp;&#9658;".html_safe, {:controller => 'households', :action => 'chart'}, {:style => 'text-decoration: none;'} %><br />
-    &copy; <%= Time.now.year %> Concern Worldwide
+    Code is <%= link_to 'open source', 'https://github.com/jskinne3/settlements' %><br />
+    Data is &copy; <%= Time.now.year %> <%= link_to 'Concern Worldwide', 'https://www.concern.net/' %>
   </div>
 </div>
