@@ -9,11 +9,16 @@ class HouseholdsController < ApplicationController
     @y_axis_options = Household.y_field_names
     @units_options = {'Percent' => 'p', 'Number of answers' => 'n'}
     @stack_options = {'Stacked bars' => 's', 'Unstacked' => 'u'}
+    @area_options = {'All areas' => 'all', 'Mukuru' => 'muk', 'Nyalenda' => 'nya', 'Korogocho' => 'kor'}
     if (request.post? or params[:graphed] == '1')
-      x, y = params[:x], params[:y] # TODO: Clean inputs to prevent SQL injection
+      x, y, area = params[:x], params[:y], params[:area] # TODO: Clean inputs to prevent SQL injection
       @y_type = Household.columns_hash[y.to_s].type
       @chart_type = (@y_type.to_s == 'integer' or @y_type.to_s == 'float') ? 'line' : 'bar'
-      hh_data = Household.where("#{x} IS NOT NULL") # TODO: Add filtering
+      if area == 'all'
+        hh_data = Household.where("#{x} IS NOT NULL")
+      else
+        hh_data = Household.where("#{x} IS NOT NULL").where(:area => area)
+      end
       @count = hh_data.length
       possible_answers = hh_data.map{|d| d[y.to_sym]}.uniq
       @chart_table = Array.new

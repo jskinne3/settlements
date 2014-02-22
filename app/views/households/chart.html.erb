@@ -45,6 +45,18 @@
         </tr>
         <tr>
           <td></td>
+          <td style="padding-top: 10px; color: #00734A;">filter</td>
+        </td>
+        <tr>
+          <td>
+            <%= label_tag :area %>
+          </td>
+          <td>
+            <%= select_tag :area, options_for_select(@area_options, params[:area]) %>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
           <td style="padding-top: 10px; color: #00734A;">bar chart options</td>
         </td>
         <tr>
