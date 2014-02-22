@@ -209,7 +209,7 @@
     </div>
   </div>
   <div style="padding-top: 25px; height: 20px;">
-    <% link = "#{root_url}households/chart?graphed=1&x=#{params[:x]}&y=#{params[:y]}&units=#{params[:units]}&stack=#{params[:stack]}#{'&std=1' unless params[:std].blank?}#{'&std=1' unless params[:med].blank?}" %>
+    <% link = "#{root_url}households/chart?graphed=1&x=#{params[:x]}&y=#{params[:y]}&units=#{params[:units]}&stack=#{params[:stack]}#{'&std=1' unless params[:std].blank?}#{'&std=1' unless params[:med].blank?}&area=#{params[:area]}&round=#{params[:round]}" %>
     <label for="link" style="float: left; padding-top: 5px;">
       Link to this chart:
     </label>
