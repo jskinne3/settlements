@@ -10,15 +10,13 @@ class HouseholdsController < ApplicationController
     @units_options = {'Percent' => 'p', 'Number of answers' => 'n'}
     @stack_options = {'Stacked bars' => 's', 'Unstacked' => 'u'}
     @area_options = {'All areas' => 'all', 'Mukuru' => 'muk', 'Nyalenda' => 'nya', 'Korogocho' => 'kor'}
+    @round_options = {'All rounds' => 'all', 'Round 5' => 'R5', 'Round 6' => 'R6', 'Round 7' => 'R7', 'Round 8' => 'R8'}
     if (request.post? or params[:graphed] == '1')
-      x, y, area = params[:x], params[:y], params[:area] # TODO: Clean inputs to prevent SQL injection
+      x, y, area, round = params[:x], params[:y], params[:area], params[:round] # TODO: Clean inputs to prevent SQL injection
       @y_type = Household.columns_hash[y.to_s].type
       @chart_type = (@y_type.to_s == 'integer' or @y_type.to_s == 'float') ? 'line' : 'bar'
-      if area == 'all'
-        hh_data = Household.where("#{x} IS NOT NULL")
-      else
-        hh_data = Household.where("#{x} IS NOT NULL").where(:area => area)
-      end
+      filter_hash = (area!='all' ? (round!='all' ? {:area=>area,:rnd=>round} : {:area=>area}) : (round!='all') ? {:rnd=>round} : {})
+      hh_data = Household.where("#{x} IS NOT NULL").where(filter_hash)
       @count = hh_data.length
       possible_answers = hh_data.map{|d| d[y.to_sym]}.uniq
       @chart_table = Array.new

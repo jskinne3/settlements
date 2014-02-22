@@ -3,7 +3,7 @@
     <%= form_tag do |f| %>
       <table cellpadding="0" cellspacing="0">
         <tr>
-          <td style="padding-right: 3px;">
+          <td>
             <%= label_tag :x, 'X axis' %>
           </td>
           <td>
@@ -53,6 +53,14 @@
           </td>
           <td>
             <%= select_tag :area, options_for_select(@area_options, params[:area]) %>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding-right: 3px;">
+            <%= label_tag :round %>
+          </td>
+          <td>
+            <%= select_tag :round, options_for_select(@round_options, params[:round]) %>
           </td>
         </tr>
         <tr>
