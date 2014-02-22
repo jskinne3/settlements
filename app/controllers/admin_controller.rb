@@ -10,7 +10,7 @@ class AdminController < ApplicationController
         if (params[:key] == ENV['Ckey'] or params[:key] == ENV['Bkey'])
           flash[:notice] = 'Key accepted for login.'
           session[:key] = 'hK78tsq$55.2y9'
-          redirect_to :controller => 'households', :action => 'index'
+          redirect_to :controller => 'households', :action => 'chart'
         else
           flash[:notice] = 'Incorrect key.'
         end
