@@ -42,12 +42,7 @@
 <% unless session[:key].blank? %>
 <div style="padding: 10px 0 0 0; font-size: 9pt; text-align: center">
   <p>
-    <%= link_to "Admin", :controller => 'admin', :action => 'index' %> |
-    <%= link_to "List data", :controller => 'admin', :action => 'list' %> |
-    <%= link_to "Import data", :controller => 'admin', :action => 'import' %> |
-    <%= link_to "Chart categorical data", :controller => 'tools', :action => 'bar' %> |
-    <%= link_to "Chart numerical data", :controller => 'tools', :action => 'line' %> |
-    <%= link_to "Logout", :controller => 'admin', :action => 'logout' %>
+    <%= link_to "Household data index", :controller => 'households', :action => 'index' %>
   </p>
   <p>
     Page loaded <%= Time.now.strftime('%c') %>

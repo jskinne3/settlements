@@ -72,6 +72,13 @@ class HouseholdsController < ApplicationController
       if @chart_type == 'bar'
         @chart_table.unshift([y]+possible_answers.map{|a| a.nil? ? 'N/A' : a.to_s}) # Label bars/columns
       end
+      # Notes on how to calculate P-value with R
+      #require 'rubygems'
+      #require 'rinruby'
+      #R.eval 'x <- read.csv("~/concern/public/john.csv")'
+      #R.eval "y <- table(x$#{@bar_meaning}, x$#{@question})"
+      #R.eval 'p <- chisq.test(y)$p.value'
+      #@pvalue = R.pull 'p'
       @pvalue = 0.001 # Fake p-value for now
     end
   end
