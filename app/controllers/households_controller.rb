@@ -10,21 +10,26 @@ class HouseholdsController < ApplicationController
     @y_axis_options = Household.y_field_names
     @units_options  = {'Percent' => 'p', 'Number of answers' => 'n'}
     @stack_options  = {'Stacked bars' => 's', 'Unstacked' => 'u'}
-    @area_options   = {'All areas' => 'all', 'Mukuru' => 'muk', 'Nyalenda' => 'nya', 'Korogocho' => 'kor'}
-    @round_options  = {'All rounds' => 'all', 'Round 5' => 'R5', 'Round 6' => 'R6', 'Round 7' => 'R7', 'Round 8' => 'R8'}
+    @city_options   = {'Both cities' => 'all', 'Nairobi' => 'nairobi', 'Kisumu' => 'kisumu' }
+    @area_options   = {'General' => {'All areas' => 'all'}, 'Nairobi' => {'Mukuru' => 'muk', 'Korogocho' => 'kor', 'Viwandani' => 'viw'}, 'Kisumu' => {'Nyalenda' => 'nya', 'Obunga' => 'obu'}}
+    @rnd_options    = {'All rounds' => 'all', 'Round 5' => 'R5', 'Round 6' => 'R6', 'Round 7' => 'R7', 'Round 8' => 'R8'}
     # Drop-down menu defaults
     params[:area]  ||= 'all'
-    params[:round] ||= 'all'
+    params[:rnd]   ||= 'all'
     params[:units] ||= 'p'
     params[:stack] ||= 's'
     params[:std]   ||= 1
     params[:x]     ||= 'inc_all_q5'
     params[:y]     ||= 'q9_1'
     if (request.post? or params[:graphed] == '1')
-      x, y, area, round = params[:x], params[:y], params[:area], params[:round] # TODO: Clean inputs to prevent SQL injection
+      x, y = params[:x], params[:y] # TODO: Clean inputs to prevent SQL injection
       @y_type = Household.columns_hash[y.to_s].type
       @chart_type = (@y_type.to_s == 'integer' or @y_type.to_s == 'float') ? 'line' : 'bar'
-      filter_hash = (area!='all' ? (round!='all' ? {:area=>area,:rnd=>round} : {:area=>area}) : (round!='all') ? {:rnd=>round} : {})
+      filter_hash = Hash.new
+      for p in [:city, :area, :rnd]
+        filter_hash = filter_hash.merge(p => params[p]) unless params[p] == 'all'
+      end
+      #filter_hash = (area!='all' ? (rnd!='all' ? {:area=>area,:rnd=>rnd} : {:area=>area}) : (rnd!='all') ? {:rnd=>rnd} : {})
       hh_data = Household.where("#{x} IS NOT NULL").where(filter_hash)
       @count = hh_data.length
       possible_answers = hh_data.map{|d| d[y.to_sym]}.uniq

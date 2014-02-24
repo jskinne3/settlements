@@ -49,18 +49,26 @@
         </td>
         <tr>
           <td>
+            <%= label_tag :city %>
+          </td>
+          <td>
+            <%= select_tag :city, options_for_select(@city_options, params[:city]) %>
+          </td>
+        </tr>
+        <tr>
+          <td>
             <%= label_tag :area %>
           </td>
           <td>
-            <%= select_tag :area, options_for_select(@area_options, params[:area]) %>
+            <%= select_tag :area, grouped_options_for_select(@area_options, params[:area]) %>
           </td>
         </tr>
         <tr>
           <td style="padding-right: 3px;">
-            <%= label_tag :round %>
+            <%= label_tag :rnd, 'Round' %>
           </td>
           <td>
-            <%= select_tag :round, options_for_select(@round_options, params[:round]) %>
+            <%= select_tag :rnd, options_for_select(@rnd_options, params[:rnd]) %>
           </td>
         </tr>
         <tr>
@@ -116,7 +124,7 @@
       </table>
     <% end %>
   </div>
-  <% if @chart_table
+  <% if @chart_table and @count > 0
     # Human-readable axis names
     x, y = field_title(params[:x]), field_title(params[:y])
     chart_title = y
@@ -182,12 +190,16 @@
   <% else %>
     <div style="float: right; background-color: #F2F2F2; width: 670px; height: 230px; border: solid silver 1px;">
       <div style="text-align: center; margin-top: 100px;">
-        &#9668; Submit query to begin
+        <% if @count == 0 %>
+          Your search criteria returned no data.
+        <% else %>
+          &#9668; Submit query to begin
+        <% end %>
       </div>
     </div>
   <% end %>
 </div>
-<% if @chart_table %>
+<% if @chart_table and @count > 0 %>
   <div id="table_div" style="width: 100%; margin-top: 10px;"></div>
   <div style="height: 62px; padding-top: 15px;">
     <div style="height: 60px; border: 1px solid black; padding: 5px; float: left; width: 120px; font-size: 8pt;">
