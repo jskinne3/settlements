@@ -15,7 +15,6 @@ module HouseholdsHelper
       'q1_4b' => 'Gender of household head',
       'yrs_in_homec' => 'Length of residency (in years)',
       'edu_bw' => 'Highest level of education for breadwinner?',
-      'q1_4b' => 'Gender of household head',
       'under_5' => 'Number of children under the age of 5',
       'over_18' => 'Number of adults (people over 18)',
       'all_ages' => 'Number of people in the household',

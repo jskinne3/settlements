@@ -14,7 +14,7 @@ class CreateHouseholds < ActiveRecord::Migration
       t.string  :yrs_in_homec
       t.string  :edu_bw
       # Response (Y) Variables
-      #t.boolean  :q1_4b
+      #t.string :q1_4b
       t.integer :under_5
       t.integer :over_18
       t.integer :all_ages
@@ -78,7 +78,7 @@ class CreateHouseholds < ActiveRecord::Migration
       t.string  :q9_1
       t.integer :q9_2
       t.integer :q9_3_bw
-      t.boolean :q9_4_bw
+      t.string  :q9_4_bw
       t.string  :q9_7_bw
       t.integer :q9_9_bw
       t.integer :q9_10_bw

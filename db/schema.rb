@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(:version => 20140224112745) do
     t.string   "q9_1"
     t.integer  "q9_2"
     t.integer  "q9_3_bw"
-    t.boolean  "q9_4_bw"
+    t.string   "q9_4_bw"
     t.string   "q9_7_bw"
     t.integer  "q9_9_bw"
     t.integer  "q9_10_bw"
