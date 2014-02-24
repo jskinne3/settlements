@@ -1,5 +1,7 @@
 class HouseholdsController < ApplicationController
 
+  before_filter :authorize
+
   def index
     @count = Household.count
   end
@@ -21,6 +23,7 @@ class HouseholdsController < ApplicationController
     params[:std]   ||= 1
     params[:x]     ||= 'inc_all_q5'
     params[:y]     ||= 'q9_1'
+    # When the user asks for data to be charted
     if (request.post? or params[:graphed] == '1')
       x, y = params[:x], params[:y] # TODO: Clean inputs to prevent SQL injection
       @y_type = Household.columns_hash[y.to_s].type
@@ -29,12 +32,12 @@ class HouseholdsController < ApplicationController
       for p in [:city, :area, :rnd]
         filter_hash = filter_hash.merge(p => params[p]) unless params[p] == 'all'
       end
-      #filter_hash = (area!='all' ? (rnd!='all' ? {:area=>area,:rnd=>rnd} : {:area=>area}) : (rnd!='all') ? {:rnd=>rnd} : {})
       hh_data = Household.where("#{x} IS NOT NULL").where(filter_hash)
       @count = hh_data.length
       possible_answers = hh_data.map{|d| d[y.to_sym]}.uniq
       @chart_table = Array.new
       intervals = hh_data.map{|d| d[x.to_sym]}.uniq.sort
+      # Calculations for every row in output table, i.e., every interval on the x-axis
       for interval in intervals
         row = Array.new
         data_in_interval = hh_data.select{|d| d[x.to_sym] == interval}
@@ -54,6 +57,7 @@ class HouseholdsController < ApplicationController
             row << ((sorted[(n - 1) / 2] + sorted[n / 2.0]) / 2.0).round(2)
           end
         else
+          # Calculations for every cell in a row, i.e., every colored region in a single bar
           for answer in possible_answers
             row << data_in_interval.select{|d| d[y.to_sym] == answer}.count
           end
