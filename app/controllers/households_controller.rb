@@ -70,7 +70,7 @@ class HouseholdsController < ApplicationController
         @chart_table << row
       end
       if @chart_type == 'bar'
-        @chart_table.unshift([y]+possible_answers.map{|a| a.blank? ? 'N/A' : a.to_s}) # Label bars/columns
+        @chart_table.unshift([y]+possible_answers.map{|a| a.nil? ? 'N/A' : a.to_s}) # Label bars/columns
       end
       @pvalue = 0.001 # Fake p-value for now
     end
