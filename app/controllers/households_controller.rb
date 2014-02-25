@@ -53,7 +53,7 @@ class HouseholdsController < ApplicationController
     if (request.post? or params[:graphed] == '1')
       x, y = params[:x], params[:y] # TODO: Clean inputs to prevent SQL injection
       @y_type = Household.columns_hash[y.to_s].type
-      @chart_type = (@y_type.to_s == 'integer' or @y_type.to_s == 'float') ? 'line' : 'bar'
+      @chart_type = (@y_type.to_s == 'integer' or @y_type.to_s == 'float') ? 'combo' : 'bar'
       filter_hash = Hash.new
       for p in [:city, :area, :rnd]
         filter_hash = filter_hash.merge(p => params[p]) unless params[p] == 'all'
@@ -63,6 +63,13 @@ class HouseholdsController < ApplicationController
       possible_answers = hh_data.map{|d| d[y.to_sym]}.uniq
       @chart_table = Array.new
       intervals = hh_data.map{|d| d[x.to_sym]}.uniq.sort
+      # Prepare combo chart to be organized by area
+      if @chart_type == 'combo'
+        areas = hh_data.map{|d| d.area}.uniq
+        @average_line_position = areas.length
+        @chart_table << ['Round']+areas+['Average']
+        row_numbers = Array.new
+      end
       # Calculations for every row in output table, i.e., every interval on the x-axis
       for interval in intervals
         row = Array.new
@@ -82,6 +89,23 @@ class HouseholdsController < ApplicationController
             sorted = datapoints.sort
             row << ((sorted[(n - 1) / 2] + sorted[n / 2.0]) / 2.0).round(2)
           end
+        elsif @chart_type == 'combo'
+          # Add cells to combo chart per area
+          for area in areas
+            data_for_cell = data_in_interval.select{|i| i.area == area}
+            datapoints = data_for_cell.map{|q| q[y.to_sym]}.compact
+            if datapoints.length > 0
+              avg = (datapoints.sum / datapoints.length.to_f).round(2)
+              row << avg
+              row_numbers << avg
+            else
+              # Using zero instead of "null" or nil so that if it appears as first in a row,
+              # Google charts does not conclude that it's a non-numeric data type.
+              row << 0
+            end
+          end
+          # Add average line to combo chart
+          row << (row_numbers.sum/row_numbers.length).round(2)
         else
           # Calculations for every cell in a row, i.e., every colored region in a single bar
           for answer in possible_answers

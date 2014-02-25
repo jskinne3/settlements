@@ -148,6 +148,17 @@
           };
           var bar_chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
           bar_chart.draw(data, chart_options);
+        <% elsif @chart_type == 'combo' %>
+          var data = google.visualization.arrayToDataTable(<%= formatted_table.html_safe %>);
+          var options = {
+            title : '<%= params[:q] %>',
+            vAxis: {title: "<%= params[:q] %>"},
+            hAxis: {title: "Round"},
+            seriesType: "bars",
+            series: {<%= @average_line_position %>: {type: "line"}} // Final column is a line for Rounds
+          };
+          var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+          chart.draw(data, options);
         <% else %>
           var data = new google.visualization.DataTable();
           data.addColumn('string', '<%= x %>');
