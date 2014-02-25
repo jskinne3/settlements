@@ -25,8 +25,9 @@ class AdminController < ApplicationController
   end
 
   def rtest
-    t = %x(R -e "a <- c(2,3,5); mean(a)")
-    render :text => t.inspect
+    ls = %x(ls)
+    r = %x(R -e "a <- c(2,3,5); mean(a)")
+    render :text => "<html><body><h1>R test</h1><p>#{ls.inspect}</p><p>#{r.inspect}</p></body></html>"
   end
 
 end
