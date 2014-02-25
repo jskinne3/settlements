@@ -6,6 +6,32 @@ class HouseholdsController < ApplicationController
     @count = Household.count
   end
 
+  def combo_test
+    @questions = Household.y_field_names
+    params[:q] ||= 'inc_bw_no'
+    @array = Array.new
+    @hh_data = Household.where("#{params[:q]} IS NOT NULL")
+    @areas = @hh_data.map{|d| d.area}.uniq
+    @rnds = @hh_data.map{|d| d.rnd}.uniq
+    @array << ['Round']+@areas+['Average']
+    for rnd in @rnds
+      row, row_numbers = [rnd], Array.new
+      for area in @areas
+        data_for_cell = @hh_data.select{|i| i.area == area && i.rnd == rnd}
+        incomes = data_for_cell.map{|e| e[params[:q].to_sym]}
+        if incomes.length > 0
+          avg = (incomes.sum / incomes.length.to_f).round(2)
+          row << avg
+          row_numbers << avg
+        else
+          row << 'null'
+        end
+      end
+      row << (row_numbers.sum/row_numbers.length).round(2)
+      @array << row
+    end
+  end
+
   def chart
     # Drop-down menu options
     @x_axis_options = Household.x_field_names

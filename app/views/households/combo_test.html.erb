@@ -1,0 +1,33 @@
+<h1> Combo chart test</h1>
+<%= form_tag do |f| %>
+  <%= select_tag :q, options_for_select(@questions, params[:q]) %>
+  <%= submit_tag 'Chart' %>
+<% end %>
+<br />
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load('visualization', '1', {packages: ['corechart']});
+</script>
+<script type="text/javascript">
+  function drawVisualization() {
+    // Some raw data (not necessarily accurate)
+    var data = google.visualization.arrayToDataTable(<%= @array.to_json.html_safe %>);
+
+    var options = {
+      title : '<%= params[:q] %>',
+      vAxis: {title: "<%= params[:q] %>"},
+      hAxis: {title: "Round"},
+      seriesType: "bars",
+      series: {<%= @array[1].length-2 %>: {type: "line"}} // Final column is a line for Rounds
+    };
+
+    var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+  google.setOnLoadCallback(drawVisualization);
+</script>
+
+<div id="chart_div" style="width: 900px; height: 500px;"></div>
+<p>Areas: <%= @areas.inspect %></p>
+<p>Rnds: <%= @rnds.inspect %></p>
+<p>Array: <%= @array.inspect %></p>
