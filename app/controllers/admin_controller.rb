@@ -24,4 +24,9 @@ class AdminController < ApplicationController
     redirect_to :action => 'login'
   end
 
+  def rtest
+    t = %x(R -e "a <- c(2,3,5); mean(a)")
+    render :text => t.inspect
+  end
+
 end
