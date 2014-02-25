@@ -155,7 +155,7 @@
             vAxis: {title: "<%= params[:q] %>"},
             hAxis: {title: "Round"},
             seriesType: "bars",
-            series: {<%= @average_line_position %>: {type: "line"}} // Final column is a line for Rounds
+            series: {0: {color: '#E8E5D3'}, 1: {color: '#B5B2A0'}, 2: {color: '#FFFFED'}, 3: {color: '#CFCCBA'}, 4: {color: '#E9E6D4'}, <%= @average_line_position %>: {type: "line", color: '#A14F0C'}} // Final column is a line for Rounds
           };
           var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
           chart.draw(data, options);
