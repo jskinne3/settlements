@@ -12,7 +12,7 @@ class HouseholdsController < ApplicationController
     @array = Array.new
     @hh_data = Household.where("#{params[:q]} IS NOT NULL")
     @areas = @hh_data.map{|d| d.area}.uniq
-    @rnds = @hh_data.map{|d| d.rnd}.uniq
+    @rnds = @hh_data.map{|d| d.rnd}.uniq.sort
     @array << ['Round']+@areas+['Average']
     for rnd in @rnds
       row, row_numbers = [rnd], Array.new
