@@ -93,22 +93,6 @@
         </tr>
         <tr>
           <td></td>
-          <td style="padding-top: 10px; color: #00734A;">line chart options</td>
-        </td>
-        <tr>
-          <td></td>
-          <td style="font-size: 8pt;">
-            <%= check_box_tag :std, 1, params[:std] %> <%= label_tag :std, 'standard deviation' %>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td style="font-size: 8pt;">
-            <%= check_box_tag :med, 1, params[:med] %> <%= label_tag :med, 'median' %>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
           <td style="padding-top: 10px">
             <%= submit_tag 'Chart', {:id => 'chart_button'} %>
           </td>
