@@ -146,7 +146,7 @@ class HouseholdsController < ApplicationController
       if @chart_type == 'column'
         @chart_table.unshift([y]+possible_answers.map{|a| a.nil? ? 'N/A' : a.to_s})
       elsif @chart_type == 'bar'
-        @chart_table = @chart_table.sort_by{|e| e[1]}
+        #@chart_table = @chart_table.sort_by{|e| e[1]}
         @chart_table.unshift([params[:x], 'mean'])
       end
       # Notes on how to calculate P-value with R
