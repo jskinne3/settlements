@@ -225,25 +225,29 @@
 </div>
 <% if @chart_table and @count > 0 %>
   <div id="table_div" style="width: 100%; margin-top: 10px;"></div>
-  <div style="height: 62px; padding-top: 15px;">
-    <div style="height: 60px; border: 1px solid black; padding: 5px; float: left; width: 120px; font-size: 8pt;">
+  <div style="height: 47px; padding-top: 15px;<%= ' opacity: 0.5;' if @pvalue == 'N/A' %>">
+    <div style="height: 45px; border: 1px solid black; padding: 5px; float: left; width: 120px; font-size: 8pt;">
       P-value
       <div style="font-size: 20pt;">
-        <%= "%.3f" % @pvalue %>
+        <%= @pvalue %>
       </div>
     </div>
-    <div style="border: 1px dashed black; height: 60px; padding: 5px; margin-left: 145px; width: 741px;">
-      <% degrees_of_freedom = @chart_table.first.length - 2
-        if degrees_of_freedom == 0 %>
-        With zero degrees of freedom, a meaningful P-value could not be calculated.
-      <% else
-        if @pvalue > 0.05 %>
-          The trend is <span style="color: #8E0042;">not statistically significant</span> (p &gt; .05) suggesting that responses between <%= @bar_meaning == 'area' ? 'areas' : 'rounds' %> do not differ more than by chance.
-        <% else %>
-          The trend is statistically significant (p &lt; .05) suggesting that <%= @bar_meaning == 'area' ? 'area' : 'round' %> influences the responses to this question.
-        <% end %>
-        P-value was calculated with the &chi;&sup2; test using <%= pluralize(degrees_of_freedom, 'degree') %> of freedom. (This is fake right now because R is not running on the server)
-      <% end %>
+    <div style="border: 1px dashed black; height: 45px; padding: 5px; margin-left: 145px; width: 741px;">
+      <% if @pvalue == 'N/A' %>
+        P-value currently cannot be calculated because R is not installed.
+      <% else %>
+        <% degrees_of_freedom = @chart_table.first.length - 2
+          if degrees_of_freedom == 0 %>
+          With zero degrees of freedom, a meaningful P-value could not be calculated.
+        <% else
+          if @pvalue > 0.05 %>
+            The trend is <span style="color: #8E0042;">not statistically significant</span> (p &gt; .05) suggesting that responses between <%= @bar_meaning == 'area' ? 'areas' : 'rounds' %> do not differ more than by chance.
+          <% else %>
+            The trend is statistically significant (p &lt; .05) suggesting that <%= @bar_meaning == 'area' ? 'area' : 'round' %> influences the responses to this question.
+          <% end %>
+          P-value was calculated with the &chi;&sup2; test using <%= pluralize(degrees_of_freedom, 'degree') %> of freedom. (This is fake right now because R is not running on the server)
+        <% end
+      end %>
     </div>
   </div>
   <div style="padding-top: 25px; height: 20px;">

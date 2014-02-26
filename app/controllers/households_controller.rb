@@ -149,7 +149,8 @@ class HouseholdsController < ApplicationController
       #R.eval "y <- table(x$#{@bar_meaning}, x$#{@question})"
       #R.eval 'p <- chisq.test(y)$p.value'
       #@pvalue = R.pull 'p'
-      @pvalue = 0.001 # Fake p-value for now
+      #@pvalue = 0.001 # Fake p-value for now
+      @pvalue = 'N/A'
     end
   end
 
