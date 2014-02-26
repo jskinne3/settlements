@@ -78,7 +78,7 @@ class HouseholdsController < ApplicationController
       if @chart_type == 'combo'
         areas = hh_data.map{|d| d.area}.uniq
         @average_line_position = areas.length
-        @chart_table << ['Round']+areas+['Average']
+        @chart_table << ['round']+areas+['mean']
         row_numbers = Array.new
       end
       # Calculations for every row in output table, i.e., every interval on the x-axis
@@ -89,26 +89,30 @@ class HouseholdsController < ApplicationController
           datapoints = data_in_interval.map{|q| q[y.to_sym] }.compact
           sum, n = datapoints.sum, datapoints.length.to_f
           mean = sum / n
-          row = [mean.round(2)]
+          row = [mean]
           if params[:std] == '1'
             variance = datapoints.map{|i| (i-mean)**2 }.sum / n
             std_deviation = Math.sqrt(variance)
-            row << (mean+(std_deviation/2.0)).round(2)
-            row << (mean-(std_deviation/2.0)).round(2)
+            row << (mean+(std_deviation/2.0))
+            row << (mean-(std_deviation/2.0))
           end
           if params[:med] == '1'
             sorted = datapoints.sort
-            row << ((sorted[(n - 1) / 2] + sorted[n / 2.0]) / 2.0).round(2)
+            row << ((sorted[(n - 1) / 2] + sorted[n / 2.0]) / 2.0)
           end
         elsif @chart_type == 'combo'
+          # Calculate mean line points
+          datapoints = data_in_interval.map{|q| q[y.to_sym] }.compact
+          sum, n = datapoints.sum, datapoints.length.to_f
+          mean = sum / n
           # Add cells to combo chart per area
           for area in areas
             data_for_cell = data_in_interval.select{|i| i.area == area}
-            datapoints = data_for_cell.map{|q| q[y.to_sym]}.compact
-            if datapoints.length > 0
-              avg = (datapoints.sum / datapoints.length.to_f).round(2)
+            data_to_average = data_for_cell.map{|q| q[y.to_sym]}.compact
+            if data_to_average.length > 0
+              sum = data_to_average.sum.to_f
+              avg = sum / data_to_average.length.to_f
               row << avg
-              row_numbers << avg
             else
               # Using zero instead of "null" or nil so that if it appears as first in a row,
               # Google charts does not conclude that it's a non-numeric data type.
@@ -116,7 +120,7 @@ class HouseholdsController < ApplicationController
             end
           end
           # Add average line to combo chart
-          row << (row_numbers.sum/row_numbers.length).round(2)
+          row << mean
         elsif @chart_type == 'column'
           # Calculations for every cell in a row, i.e., every colored region in a single bar
           for answer in possible_answers
@@ -124,15 +128,18 @@ class HouseholdsController < ApplicationController
           end
           if params[:units] == 'p' # Calculate percents
             sum = row.sum.to_f
-            row = row.map{|n| ("%.2f" % ((n.to_f/sum)*100.0)).to_f}
+            row = row.map{|n| ((n.to_f/sum)*100.0).to_f}
           end
         elsif @chart_type == 'bar'
           datapoints = data_in_interval.map{|q| q[y.to_sym] }.compact
           sum, n = datapoints.sum, datapoints.length.to_f
           mean = sum / n
-          row = [mean.round(2)]
+          row = [mean]
         end
-        row.unshift(interval) # Label rows
+        # Round floats
+        row = row.map{|n| n.round(2)}
+        # Label rows
+        row.unshift(interval)
         @chart_table << row
       end
       # Label bars/columns
