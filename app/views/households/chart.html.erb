@@ -93,6 +93,21 @@
         </tr>
         <tr>
           <td></td>
+          <td style="padding-top: 10px; color: #00734A;">line chart options</td>
+        <tr>
+          <td></td>
+          <td style="font-size: 8pt;">
+            <%= check_box_tag :std, 1, params[:std] %> <%= label_tag :std, 'standard deviation' %>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td style="font-size: 8pt;">
+            <%= check_box_tag :med, 1, params[:med] %> <%= label_tag :med, 'median' %>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
           <td style="padding-top: 10px">
             <%= submit_tag 'Chart', {:id => 'chart_button'} %>
           </td>
@@ -120,7 +135,7 @@
       google.load("visualization", "1", {packages:["corechart", "table"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
-        <% if @chart_type == 'bar' %>
+        <% if @chart_type == 'column' %>
           var data = google.visualization.arrayToDataTable(<%= formatted_table.html_safe %>);
           var chart_options = {
             backgroundColor: { fill: "#F2F2F2" },
@@ -135,6 +150,7 @@
         <% elsif @chart_type == 'combo' %>
           var data = google.visualization.arrayToDataTable(<%= formatted_table.html_safe %>);
           var options = {
+            backgroundColor: { fill: "#F2F2F2" },
             title : '<%= params[:q] %>',
             vAxis: {title: "<%= params[:q] %>"},
             hAxis: {title: "Round"},
@@ -143,7 +159,7 @@
           };
           var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
           chart.draw(data, options);
-        <% else %>
+        <% elsif @chart_type == 'line' %>
           var data = new google.visualization.DataTable();
           data.addColumn('string', '<%= x %>');
           data.addColumn('number', '<%= y %>');
@@ -171,6 +187,18 @@
           };
           var line_chart = new google.visualization.LineChart(document.getElementById('chart_div'));
           line_chart.draw(data, chart_options);
+        <% elsif @chart_type == 'bar' %>
+          var data = google.visualization.arrayToDataTable(<%= formatted_table.html_safe %>);
+
+          var options = {
+            backgroundColor: { fill: "#F2F2F2" },
+            title: '<%= chart_title %>',
+            series: [{color: '#A14F0C'}],
+            vAxis: {title: '<%= x %>',  titleTextStyle: {color: 'black'}}
+          };
+
+          var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+          chart.draw(data, options);
         <% end %>
         var table_options = {
           width: 648

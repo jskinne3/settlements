@@ -49,11 +49,22 @@ class HouseholdsController < ApplicationController
     params[:std]   ||= 1
     params[:x]     ||= 'inc_all_q5'
     params[:y]     ||= 'q9_1'
-    # When the user asks for data to be charted
+    # If user asks for data to be charted (by pressing "Chart" button or following certain links).
     if (request.post? or params[:graphed] == '1')
       x, y = params[:x], params[:y] # TODO: Clean inputs to prevent SQL injection
       @y_type = Household.columns_hash[y.to_s].type
-      @chart_type = (@y_type.to_s == 'integer' or @y_type.to_s == 'float') ? 'combo' : 'bar'
+      # Determine type of chart to display
+      if params[:chart_type]        # Allow chart type to be selected with URL parameter
+        @chart_type = params[:chart_type]
+      elsif (@y_type.to_s == 'integer' or @y_type.to_s == 'float')
+        if x == 'rnd'               # If the y-axis is continuous and the x-axis is "Round",
+          @chart_type = 'line'      # then draw a line chart.
+        else                        # If the y-axis is continuous and the x-axis is something else,
+          @chart_type = 'bar'       # then draw a horizontal, single-color bar chart.
+        end
+      else                          # If the y-axis is categorical,
+        @chart_type = 'column'      # then draw a vertial, multi-color column chart.
+      end
       filter_hash = Hash.new
       for p in [:city, :area, :rnd]
         filter_hash = filter_hash.merge(p => params[p]) unless params[p] == 'all'
@@ -106,7 +117,7 @@ class HouseholdsController < ApplicationController
           end
           # Add average line to combo chart
           row << (row_numbers.sum/row_numbers.length).round(2)
-        else
+        elsif @chart_type == 'column'
           # Calculations for every cell in a row, i.e., every colored region in a single bar
           for answer in possible_answers
             row << data_in_interval.select{|d| d[y.to_sym] == answer}.count
@@ -115,12 +126,21 @@ class HouseholdsController < ApplicationController
             sum = row.sum.to_f
             row = row.map{|n| ("%.2f" % ((n.to_f/sum)*100.0)).to_f}
           end
+        elsif @chart_type == 'bar'
+          datapoints = data_in_interval.map{|q| q[y.to_sym] }.compact
+          sum, n = datapoints.sum, datapoints.length.to_f
+          mean = sum / n
+          row = [mean.round(2)]
         end
         row.unshift(interval) # Label rows
         @chart_table << row
       end
-      if @chart_type == 'bar'
-        @chart_table.unshift([y]+possible_answers.map{|a| a.nil? ? 'N/A' : a.to_s}) # Label bars/columns
+      # Label bars/columns
+      if @chart_type == 'column'
+        @chart_table.unshift([y]+possible_answers.map{|a| a.nil? ? 'N/A' : a.to_s})
+      elsif @chart_type == 'bar'
+        @chart_table = @chart_table.sort_by{|e| e[1]}
+        @chart_table.unshift([params[:x], 'mean'])
       end
       # Notes on how to calculate P-value with R
       #require 'rubygems'
