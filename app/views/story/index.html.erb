@@ -1,7 +1,25 @@
 <h1>Story</h1>
 
-<samp>If you can read this, D3.js is not working</samp>
+<main>
+  <samp>If you can read this, D3.js is not working</samp>
+</main>
+
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
   d3.select("samp").text("D3.js is working and put this text here.")
+
+  var canvas = d3.select("main").append("svg")
+    .attr("width", 700)
+    .attr("height", 350)
+    .style("border", "1px solid white")
+
+  var mySquare=canvas.append("rect")
+  .attr("x",60)
+  .attr("y",60)
+  .attr("width",60)
+  .attr("height",60);
+
+  mySquare
+  .transition()
+  .attr("x",320);
 </script>
