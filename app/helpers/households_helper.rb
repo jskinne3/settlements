@@ -93,7 +93,7 @@ module HouseholdsHelper
       'q10_1a' => 'Taken a loan to purchase food and other items?',
       'q10_2' => 'Removed children from school due to a lack of school related costs?',
       'q10_3' => 'Member of household left/moved due to lack of resources?',
-      'q10_4' => 'Has any household member gone out begging for money of food?',
+      'q10_4' => 'Has any household member gone out begging for money for food?',
       'q10_5' => 'Has any household member traded sex for money or food?',
       'q10_8' => 'Has any household member stolen food or money?',
       'q10_10' => 'Has any household member received food or money from friend/neighbor/relative?',
